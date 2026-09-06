@@ -28,7 +28,7 @@ def read_root():
 def health():
     return {"status": "ok", "model": settings.model_name}
 
-@api.get("/query")
+@api.post("/query")
 async def query(req: QueryRequest, api_key: str = Depends(verify_api_key)):
     # Setup initial state
     state = {
