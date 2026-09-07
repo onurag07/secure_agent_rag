@@ -40,3 +40,15 @@ class AgentState(TypedDict):
     # Metadata
     error: Optional[str]
     iteration_count: Annotated[int, operator.add]
+
+
+# Agent communication example:
+def critic_agent(state: AgentState) -> AgentState:
+    # Reads from retrieval agent's output
+    docs  = state["retrieved_docs"]      # ← retriever wrote this
+    query = state["sanitized_query"]     # ← pii_redact wrote this
+
+    score = evaluate_relevance(docs, query)
+
+    # Writes for generator agent to read
+    return {**state, "retrieval_score": score}  # → generator will read this

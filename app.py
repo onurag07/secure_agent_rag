@@ -2,6 +2,7 @@ import streamlit as st
 import uuid
 import requests
 import json
+from config import settings
 
 st.set_page_config(page_title="SecureAgentRAG", page_icon="🛡️")
 st.title("🛡️ SecureAgentRAG Chat")
@@ -49,6 +50,7 @@ if prompt := st.chat_input("Ask a secure question..."):
                 # The backend API uses the thread_id to resume LangGraph state
                 response = requests.post(
                     "http://localhost:8000/api/chat",
+                    headers={"X-API-Key": settings.secret_key},
                     json={
                         "message": prompt,
                         "thread_id": st.session_state.thread_id,
@@ -56,6 +58,7 @@ if prompt := st.chat_input("Ask a secure question..."):
                     },
                     timeout=30
                 )
+
                 if response.status_code == 200:
                     data = response.json()
                     answer = data.get("generation", "I couldn't generate an answer.")

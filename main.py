@@ -4,14 +4,23 @@ from pydantic import BaseModel
 from graph import app as agent_graph
 from config import settings
 import os
+from observability import bootstrap_langsmith
 
-api = FastAPI(title="SecureAgentRAG", version="2.0")
+
+app = FastAPI(title="SecureAgentRAG", version="2.0")
+
+@app.on_event("startup")
+async def startup():
+    # After this: every LangGraph node run is automatically traced.
+    # No other code changes needed for basic tracing.
+    # Bootstrap LangSmith tracing at application start
+    bootstrap_langsmith()
 
 # --- AUTHENTICATION ---
-api_key_header = APIKeyHeader(name="X-API-Key")
+api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 
 def verify_api_key(api_key: str = Security(api_key_header)):
-    if api_key != settings.secret_key:
+    if api_key and api_key != settings.secret_key:
         raise HTTPException(status_code=403, detail="Invalid API Key")
     return api_key
 
@@ -21,11 +30,12 @@ class QueryRequest(BaseModel):
     session_id: str = "default_session"
     thread_id: str = "default_thread"
 
-@api.get("/health")
+@app.get("/health")
+@app.get("/api/v1/health")
 def health():
     return {"status": "ok", "model": settings.model_name}
 
-@api.post("/api/chat")
+@app.post("/api/chat")
 async def chat(req: QueryRequest, api_key: str = Depends(verify_api_key)):
     # Setup initial state
     state = {
@@ -52,4 +62,4 @@ if __name__ == "__main__":
     # Make sure GROQ_API_KEY is available in environment
     if not os.getenv("GROQ_API_KEY"):
         print("WARNING: GROQ_API_KEY not found in environment!")
-    uvicorn.run("main:api", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

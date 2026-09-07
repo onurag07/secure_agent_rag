@@ -15,7 +15,6 @@ RUN python -c "from sentence_transformers import SentenceTransformer; \
 # STAGE 2: Production — no build tools, smaller, secure
 FROM python:3.11-slim AS production
 COPY --from=builder /opt/venv /opt/venv
-COPY --from=builder /root/.cache /root/.cache
 ENV PATH="/opt/venv/bin:$PATH"
 
 # SECURITY: non-root user
@@ -23,6 +22,10 @@ RUN groupadd --gid 1001 appgroup && \
     useradd --uid 1001 --gid appgroup appuser
 
 WORKDIR /app
+# Copy model cache and chown it so appuser can read it
+COPY --from=builder --chown=appuser:appgroup /root/.cache /app/.cache
+ENV HF_HOME=/app/.cache
+
 COPY --chown=appuser:appgroup . .
 USER appuser    # ← runs as non-root
 
