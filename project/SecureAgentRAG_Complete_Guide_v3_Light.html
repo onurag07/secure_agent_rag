@@ -416,7 +416,7 @@ pre.expanded{max-height:none}
   <div class="sb-item" onclick="go(10)"><span class="sb-num">10</span><span>Docker Install &amp; Run</span></div>
   <div class="sb-item" onclick="go(11)"><span class="sb-num">11</span><span>Dockerfile</span></div>
   <div class="sb-item" onclick="go(12)"><span class="sb-num">12</span><span>Docker Compose</span></div>
-  <div class="sb-item" onclick="go(13)"><span class="sb-num">13</span><span>Vercel (Frontend)</span></div>
+  <div class="sb-item" onclick="go(13)"><span class="sb-num">13</span><span>Streamlit UI (Frontend)</span></div>
   <div class="sb-item" onclick="go(14)"><span class="sb-num">14</span><span>Railway (Backend)</span></div>
   <div class="sb-item" onclick="go(15)"><span class="sb-num">15</span><span>Resume Bullets</span></div>
 
@@ -491,7 +491,7 @@ pre.expanded{max-height:none}
           <strong style="font-size:.85rem;color:var(--t0)">.env</strong>
           <div style="font-size:.72rem;color:var(--t1);margin-top:.15rem">Contains your GROQ_API_KEY and LangSmith tracing settings. Create in project root.</div>
         </div>
-        <button onclick="go(0)" style="background:#6366f1;color:#fff;border:none;padding:.35rem .8rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">🚀 Jump to .env</button>
+        <button onclick="go(5)" style="background:#6366f1;color:#fff;border:none;padding:.35rem .8rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">🚀 View Full Code (Step 05)</button>
       </div>
 
       <!-- File 2 -->
@@ -501,7 +501,7 @@ pre.expanded{max-height:none}
           <strong style="font-size:.85rem;color:var(--t0)">config.py</strong>
           <div style="font-size:.72rem;color:var(--t1);margin-top:.15rem">Pydantic BaseSettings class. Loads environment variables automatically.</div>
         </div>
-        <button onclick="go(2)" style="background:#6366f1;color:#fff;border:none;padding:.35rem .8rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">🚀 Jump to Code (Step 02)</button>
+        <button onclick="go(5)" style="background:#6366f1;color:#fff;border:none;padding:.35rem .8rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">🚀 View Full Code (Step 05)</button>
       </div>
 
       <!-- File 3 -->
@@ -511,7 +511,7 @@ pre.expanded{max-height:none}
           <strong style="font-size:.85rem;color:var(--t0)">state.py</strong>
           <div style="font-size:.72rem;color:var(--t1);margin-top:.15rem">Defines <code>AgentState</code> (TypedDict) and <code>SecurityEvent</code> (dataclass). Passed across all nodes.</div>
         </div>
-        <button onclick="go(2)" style="background:#6366f1;color:#fff;border:none;padding:.35rem .8rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">🚀 Jump to Code (Step 02)</button>
+        <button onclick="go(5)" style="background:#6366f1;color:#fff;border:none;padding:.35rem .8rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">🚀 View Full Code (Step 05)</button>
       </div>
 
       <!-- File 4 -->
@@ -521,7 +521,7 @@ pre.expanded{max-height:none}
           <strong style="font-size:.85rem;color:var(--t0)">security/prompt_guard.py</strong>
           <div style="font-size:.72rem;color:var(--t1);margin-top:.15rem">Layer 1 Security: Token limits, regex patterns, and ChatGroq LLM semantic threat checking.</div>
         </div>
-        <button onclick="go(3)" style="background:#dc2626;color:#fff;border:none;padding:.35rem .8rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">🚀 Jump to Code (Step 03)</button>
+        <button onclick="go(5)" style="background:#dc2626;color:#fff;border:none;padding:.35rem .8rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">🚀 View Full Code (Step 05)</button>
       </div>
 
       <!-- File 5 -->
@@ -531,7 +531,7 @@ pre.expanded{max-height:none}
           <strong style="font-size:.85rem;color:var(--t0)">security/pii_redactor.py</strong>
           <div style="font-size:.72rem;color:var(--t1);margin-top:.15rem">Layer 2 Security: Presidio Anonymizer (redacts emails, SSNs, credit cards, phone numbers).</div>
         </div>
-        <button onclick="go(3)" style="background:#dc2626;color:#fff;border:none;padding:.35rem .8rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">🚀 Jump to Code (Step 03)</button>
+        <button onclick="go(5)" style="background:#dc2626;color:#fff;border:none;padding:.35rem .8rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">🚀 View Full Code (Step 05)</button>
       </div>
 
       <!-- File 6 -->
@@ -541,7 +541,7 @@ pre.expanded{max-height:none}
           <strong style="font-size:.85rem;color:var(--t0)">security/output_validator.py</strong>
           <div style="font-size:.72rem;color:var(--t1);margin-top:.15rem">Layer 3 Security: Scans LLM responses to ensure zero PII or system prompt leaks.</div>
         </div>
-        <button onclick="go(3)" style="background:#dc2626;color:#fff;border:none;padding:.35rem .8rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">🚀 Jump to Code (Step 03)</button>
+        <button onclick="go(5)" style="background:#dc2626;color:#fff;border:none;padding:.35rem .8rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">🚀 View Full Code (Step 05)</button>
       </div>
 
       <!-- File 7 -->
@@ -551,7 +551,7 @@ pre.expanded{max-height:none}
           <strong style="font-size:.85rem;color:var(--t0)">agents/planner.py</strong>
           <div style="font-size:.72rem;color:var(--t1);margin-top:.15rem">Intent Classification &amp; Query Decomposition node for breaking complex user questions.</div>
         </div>
-        <button onclick="go(5)" style="background:#059669;color:#fff;border:none;padding:.35rem .8rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">🚀 Jump to Code (Step 05)</button>
+        <button onclick="go(5)" style="background:#059669;color:#fff;border:none;padding:.35rem .8rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">🚀 View Full Code (Step 05)</button>
       </div>
 
       <!-- File 8 -->
@@ -561,7 +561,7 @@ pre.expanded{max-height:none}
           <strong style="font-size:.85rem;color:var(--t0)">agents/retriever.py</strong>
           <div style="font-size:.72rem;color:var(--t1);margin-top:.15rem">Vector search (ChromaDB + HuggingFace Embeddings) &amp; BM25 hybrid document retriever.</div>
         </div>
-        <button onclick="go(5)" style="background:#059669;color:#fff;border:none;padding:.35rem .8rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">🚀 Jump to Code (Step 05)</button>
+        <button onclick="go(5)" style="background:#059669;color:#fff;border:none;padding:.35rem .8rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">🚀 View Full Code (Step 05)</button>
       </div>
 
       <!-- File 9 -->
@@ -571,7 +571,7 @@ pre.expanded{max-height:none}
           <strong style="font-size:.85rem;color:var(--t0)">agents/critic_generator.py</strong>
           <div style="font-size:.72rem;color:var(--t1);margin-top:.15rem">Generates grounded answer using Groq Llama 3.3 70B &amp; performs hallucination validation.</div>
         </div>
-        <button onclick="go(5)" style="background:#059669;color:#fff;border:none;padding:.35rem .8rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">🚀 Jump to Code (Step 05)</button>
+        <button onclick="go(5)" style="background:#059669;color:#fff;border:none;padding:.35rem .8rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">🚀 View Full Code (Step 05)</button>
       </div>
 
       <!-- File 10 -->
@@ -581,7 +581,7 @@ pre.expanded{max-height:none}
           <strong style="font-size:.85rem;color:var(--t0)">graph.py</strong>
           <div style="font-size:.72rem;color:var(--t1);margin-top:.15rem">LangGraph StateGraph builder: Connects all nodes, security checks, and conditional edges.</div>
         </div>
-        <button onclick="go(5)" style="background:#7c3aed;color:#fff;border:none;padding:.35rem .8rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">🚀 Jump to Code (Step 05)</button>
+        <button onclick="go(5)" style="background:#7c3aed;color:#fff;border:none;padding:.35rem .8rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">🚀 View Full Code (Step 05)</button>
       </div>
 
       <!-- File 11 -->
@@ -591,7 +591,7 @@ pre.expanded{max-height:none}
           <strong style="font-size:.85rem;color:var(--t0)">main.py</strong>
           <div style="font-size:.72rem;color:var(--t1);margin-top:.15rem">FastAPI Application &amp; Interactive CLI entrypoint. Runs the compiled LangGraph pipeline.</div>
         </div>
-        <button onclick="go(5)" style="background:#7c3aed;color:#fff;border:none;padding:.35rem .8rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">🚀 Jump to Code (Step 05)</button>
+        <button onclick="go(5)" style="background:#7c3aed;color:#fff;border:none;padding:.35rem .8rem;border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer">🚀 View Full Code (Step 05)</button>
       </div>
 
     </div>
@@ -1393,6 +1393,7 @@ class AgentState(TypedDict):
     query: str
     user_id: str
     session_id: str
+    thread_id: str
     
     # Security
     is_safe: bool
@@ -1707,31 +1708,33 @@ def verify_api_key(api_key: str = Security(api_key_header)):
     return api_key
 
 class QueryRequest(BaseModel):
-    query: str
+    message: str
     user_id: str = "anonymous"
     session_id: str = "default_session"
+    thread_id: str = "default_thread"
 
 @api.get("/health")
 def health():
     return {"status": "ok", "model": settings.model_name}
 
-@api.post("/query")
-async def query(req: QueryRequest, api_key: str = Depends(verify_api_key)):
+@api.post("/api/chat")
+async def chat(req: QueryRequest, api_key: str = Depends(verify_api_key)):
     # Setup initial state
     state = {
-        "query": req.query, 
+        "query": req.message, 
         "user_id": req.user_id, 
         "session_id": req.session_id,
+        "thread_id": req.thread_id,
         "security_events": [],
         "iteration_count": 0
     }  
     
-    # Execute LangGraph pipeline with session memory
-    config = {"configurable": {"thread_id": req.session_id}}
+    # Execute LangGraph pipeline with session and thread memory
+    config = {"configurable": {"thread_id": req.thread_id, "session_id": req.session_id}}
     result = await agent_graph.ainvoke(state, config=config)
     
     return {
-        "response": result.get('final_response', 'Request failed.'),
+        "generation": result.get('final_response', 'Request failed.'),
         "safe": result.get('is_safe', False),
         "threat_type": result.get('threat_type')
     }
@@ -1800,6 +1803,39 @@ async def startup():
     bootstrap_langsmith()
     # After this: every LangGraph node run is automatically traced.
     # No other code changes needed for basic tracing.</pre></div>
+  </div>
+  <div class="card" style="margin-top:1.1rem">
+    <div class="c-ti" style="margin-bottom:.75rem">📝 observability/langsmith_config.py</div>
+    <div class="code-wrap"><button class="cp" onclick="cpEl(this)">Copy</button>
+<pre>import os
+from langsmith import Client
+
+def bootstrap_langsmith():
+    """Initializes LangSmith tracing if enabled."""
+    if os.getenv("LANGCHAIN_TRACING_V2") == "true":
+        client = Client()
+        project_name = os.getenv("LANGCHAIN_PROJECT", "secure-agent-rag")
+        print(f"✅ LangSmith Tracing Enabled. Project: {project_name}")
+    else:
+        print("⚠️ LangSmith Tracing Disabled.")
+
+def create_eval_dataset_from_traces(project_name, dataset_name, filter_tags=None, limit=100):
+    """Creates a dataset from production traces for evaluation."""
+    client = Client()
+    runs = client.list_runs(
+        project_name=project_name,
+        is_root=True,
+        tags=filter_tags,
+        limit=limit
+    )
+    dataset = client.create_dataset(dataset_name)
+    for run in runs:
+        client.create_example(
+            inputs=run.inputs,
+            outputs=run.outputs,
+            dataset_id=dataset.id
+        )
+    return dataset.id</pre></div>
   </div>
   <div class="nav-footer"><button class="nav-btn" onclick="go(5)">← Prev</button><button class="nav-btn pri" onclick="go(7)">Next: Traces →</button></div>
 
@@ -1893,6 +1929,37 @@ results = run_all_evaluators(
 print(results)
 # {"faithfulness":0.85,"context_relevance":0.79,
 #  "security_effectiveness":1.0,"pii_safety":1.0}</pre></div>
+  <div class="card" style="margin-top:1.1rem">
+    <div class="c-ti" style="margin-bottom:.75rem">📝 observability/evaluators.py</div>
+    <div class="code-wrap"><button class="cp" onclick="cpEl(this)">Copy</button>
+<pre>from langsmith.evaluation import evaluate, LangChainStringEvaluator
+
+def exact_match_evaluator(run, example):
+    """Custom exact match evaluator (e.g., for PII/Security safety checks)."""
+    expected = example.outputs.get("output", "")
+    actual = run.outputs.get("output", "")
+    return {"key": "exact_match", "score": int(expected == actual)}
+
+def run_all_evaluators(dataset_name, experiment_prefix):
+    """Runs all custom evaluators against a LangSmith dataset."""
+    # Built-in LLM-as-a-judge evaluators
+    qa_evaluator = LangChainStringEvaluator("qa")
+    context_evaluator = LangChainStringEvaluator("context_qa")
+    
+    # Mock prediction function - replace with your LangGraph entry point
+    # e.g., from main import app; return app.invoke(inputs)
+    def predict(inputs):
+        return {"output": "Mock pipeline response based on input"}
+
+    # Execute the evaluation
+    results = evaluate(
+        predict,
+        data=dataset_name,
+        evaluators=[qa_evaluator, context_evaluator, exact_match_evaluator],
+        experiment_prefix=experiment_prefix,
+    )
+    return results</pre></div>
+  </div>
   <div class="nav-footer"><button class="nav-btn" onclick="go(7)">← Prev</button><button class="nav-btn pri" onclick="go(9)">Next: Feedback →</button></div>
 
   <!-- 🔘 PREV/NEXT ACTION BUTTONS FOR STEP 8 -->
@@ -2046,7 +2113,6 @@ RUN python -c "from sentence_transformers import SentenceTransformer; \
 # STAGE 2: Production — no build tools, smaller, secure
 FROM python:3.11-slim AS production
 COPY --from=builder /opt/venv /opt/venv
-COPY --from=builder /root/.cache /root/.cache
 ENV PATH="/opt/venv/bin:$PATH"
 
 # SECURITY: non-root user
@@ -2054,6 +2120,10 @@ RUN groupadd --gid 1001 appgroup && \
     useradd --uid 1001 --gid appgroup appuser
 
 WORKDIR /app
+# Copy model cache and chown it so appuser can read it
+COPY --from=builder --chown=appuser:appgroup /root/.cache /app/.cache
+ENV HF_HOME=/app/.cache
+
 COPY --chown=appuser:appgroup . .
 USER appuser    # ← runs as non-root
 
@@ -2141,7 +2211,12 @@ CMD ["uvicorn","main:app","--host","0.0.0.0","--port","8000","--workers","2"]</p
       test: ["CMD-SHELL","pg_isready -U rag_user -d rag_db"]
   mongo:      { image: mongo:7.0, volumes: [mongo_data:/data/db] }
   prometheus: { image: prom/prometheus:v2.55.0 }
-  grafana:    { image: grafana/grafana:11.3.0, ports: ["3001:3000"] }</pre></div>
+  grafana:    { image: grafana/grafana:11.3.0, ports: ["3001:3000"] }
+
+volumes:
+  qdrant_data:
+  postgres_data:
+  mongo_data:</pre></div>
   <div class="nav-footer"><button class="nav-btn" onclick="go(11)">← Prev</button><button class="nav-btn pri" onclick="go(13)">Next: Vercel →</button></div>
 
   <!-- 🔘 PREV/NEXT ACTION BUTTONS FOR STEP 12 -->
@@ -2166,25 +2241,93 @@ CMD ["uvicorn","main:app","--host","0.0.0.0","--port","8000","--workers","2"]</p
   <button onclick="go(20)" style="background:var(--bg2);border:1px solid var(--b1);color:var(--t1);padding:.25rem .6rem;border-radius:15px;font-size:.68rem;font-weight:600;cursor:pointer;white-space:nowrap">🎯 20 Interview Q&amp;A</button>
 </div>
 
-  <div class="step-badge" style="background:rgba(255,255,255,.06);color:#ccc;border:1px solid rgba(255,255,255,.12)">Step 13 · Vercel (Frontend)</div>
-  <h2 class="sec-title">🔺 Deploy Frontend on Vercel</h2>
-  <div class="ib ib-warn"><span class="ib-ico">⚠️</span><span><strong>Vercel = frontend only.</strong> No Docker, no Python backends. LangGraph pipelines take 5–30s — Vercel free tier times out at 10s. Backend → Railway (Step 14).</span></div>
-  <div class="terminal"><div class="t-bar"><div class="td td-r"></div><div class="td td-a"></div><div class="td td-g"></div><div class="t-lbl">Deploy Next.js UI to Vercel</div><button class="cp" onclick="cpT(this)">Copy</button></div>
-  <div class="t-body"><span class="prompt">$</span> <span class="cmd">npx create-next-app@latest secure-agent-ui --typescript --tailwind</span>
-<span class="prompt">$</span> <span class="cmd">cd secure-agent-ui</span>
-<span class="prompt">$</span> <span class="cmd">echo "BACKEND_URL=https://your-api.railway.app" >> .env.local</span>
-<span class="prompt">$</span> <span class="cmd">git init && git add . && git commit -m "init"</span>
-<span class="prompt">$</span> <span class="cmd">npx vercel --prod</span>
-<span class="out">✅ https://secure-agent-ui.vercel.app</span>
-<span class="cmt"># Git push → auto-redeploy (zero manual steps)</span></div></div>
+  <div class="step-badge" style="background:rgba(236,72,153,.12);color:#ec4899;border:1px solid rgba(236,72,153,.2)">Step 13 · Streamlit UI & Session Management</div>
+  <h2 class="sec-title">🎨 Streamlit UI + pgvector</h2>
+  <p class="sec-body">Build a modern chat interface that seamlessly interacts with your LangGraph agent, using <code>thread_id</code> and <code>session_id</code> for conversational memory, all backed by <strong>pgvector</strong>.</p>
+  
+  <div class="card-hd"><div class="c-ico" style="background:rgba(99,102,241,.12)">💻</div><div><div class="c-ti">app.py — Streamlit Frontend</div><div class="c-sub">Manages session state, thread memory, and API communication</div></div></div>
+  
+  <div class="code-wrap">
+<pre><button class="cp" onclick="cpEl(this)">Copy</button>import streamlit as st
+import uuid
+import requests
+import json
+
+st.set_page_config(page_title="SecureAgentRAG", page_icon="🛡️")
+st.title("🛡️ SecureAgentRAG Chat")
+
+# Initialize session state variables
+if "session_id" not in st.session_state:
+    st.session_state.session_id = str(uuid.uuid4())
+if "thread_id" not in st.session_state:
+    st.session_state.thread_id = str(uuid.uuid4())
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# Sidebar for session management and pgvector stats
+with st.sidebar:
+    st.header("⚙️ Session Details")
+    st.caption(f"**Session ID:** {st.session_state.session_id[:8]}...")
+    st.caption(f"**Thread ID:** {st.session_state.thread_id[:8]}...")
+    
+    if st.button("Clear Chat History"):
+        st.session_state.messages = []
+        st.session_state.thread_id = str(uuid.uuid4()) # Start a new thread
+        st.rerun()
+        
+    st.divider()
+    st.header("🐘 pgvector backend")
+    st.success("Vector Database Connected")
+    st.info("Hybrid Search (HNSW) Active")
+
+# Render existing messages
+for msg in st.session_state.messages:
+    with st.chat_message(msg["role"]):
+        st.markdown(msg["content"])
+
+# Chat Input
+if prompt := st.chat_input("Ask a secure question..."):
+    # 1. Add user message to UI
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.markdown(prompt)
+        
+    # 2. Call backend API (which uses LangGraph + pgvector)
+    with st.chat_message("assistant"):
+        with st.spinner("Thinking securely..."):
+            try:
+                # The backend API uses the thread_id to resume LangGraph state
+                response = requests.post(
+                    "http://localhost:8000/api/chat",
+                    json={
+                        "message": prompt,
+                        "thread_id": st.session_state.thread_id,
+                        "session_id": st.session_state.session_id
+                    },
+                    timeout=30
+                )
+                if response.status_code == 200:
+                    data = response.json()
+                    answer = data.get("generation", "I couldn't generate an answer.")
+                    st.markdown(answer)
+                    st.session_state.messages.append({"role": "assistant", "content": answer})
+                else:
+                    st.error(f"Backend error: {response.status_code}")
+            except Exception as e:
+                st.error("Failed to connect to the backend server. Is it running?")
+</pre>
+  </div>
+  
+  <div class="ib ib-note"><span class="ib-ico">💡</span><span><strong>Why this works well:</strong> By sending the <code>thread_id</code> in the payload, the backend can retrieve the exact conversation history from PostgreSQL checkpointer (saver), allowing the LangGraph agent to remember previous context. The pgvector retrieval steps happen transparently on the backend.</span></div>
+  
   <div class="nav-footer"><button class="nav-btn" onclick="go(12)">← Prev</button><button class="nav-btn pri" onclick="go(14)">Next: Railway →</button></div>
 
   <!-- 🔘 PREV/NEXT ACTION BUTTONS FOR STEP 13 -->
   <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:2.5rem;padding-top:1.2rem;border-top:2px solid var(--b1);flex-wrap:wrap">
     <button onclick="go(12)" style="background:var(--bg2);border:1px solid var(--b2);color:var(--t0);padding:.55rem 1.1rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
-      ← 12 · Docker Compose
+      ← 12 · Docker Compose</button>
     <button onclick="go(14)" style="background:linear-gradient(135deg,#6366f1,#0891b2);color:#fff;border:none;padding:.55rem 1.2rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
-      14 · Railway Deploy →
+      14 · Railway Deploy →</button>
   </div>
 </div>
 
@@ -3549,7 +3692,7 @@ class Settings(BaseSettings):
       <div style="font-weight:800;color:var(--t0);margin-bottom:.4rem">✅ Solved Gap: Conversational Memory (Sessions)</div>
       <div style="font-size:.8rem;color:var(--t1);line-height:1.5">
         <strong>The Problem:</strong> Normally, LangGraph nodes run, finish, and die, making them forget previous questions. (If you don't use a checkpointer).<br><br>
-        <strong>How we fixed it:</strong> We imported <code>MemorySaver</code> in <code>graph.py</code> and passed <code>config={"configurable": {"thread_id": req.session_id}}</code> in <code>main.py</code>. Now it fully remembers you across questions!
+        <strong>How we fixed it:</strong> We imported <code>MemorySaver</code> in <code>graph.py</code> and passed <code>config={"configurable": {"thread_id": req.thread_id}}</code> in <code>main.py</code>. Now it fully remembers you across questions!
       </div>
       <div class="code-wrap" style="margin-top:.8rem"><button class="cp" onclick="cpEl(this)">Copy</button><pre>from langgraph.checkpoint.memory import MemorySaver
 memory = MemorySaver()
