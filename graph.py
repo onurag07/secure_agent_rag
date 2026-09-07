@@ -1,81 +1,62 @@
-import security
 from langgraph.graph import StateGraph, START, END
 from state import AgentState
-from config import get_settings
+from config import settings
+from langgraph.checkpoint.memory import MemorySaver
 
-settings = get_settings()
-
-
-# NODE 1: prompt Gaurd (Security Layer 1)
-def prompt_gaurd(state: AgentState)->dict:
-    """Block dangerous Prompt before they reach to the LLM"""
+# --- Nodes ---
+def prompt_guard(state: AgentState) -> dict:
     from security.prompt_guard import check_safety
-    is_safe, thread = check_safety(state["query"])
-    return {
-        'is_safe':is_safe,
-        'thread_type':thread
-    }
-    
-# NODE 2: PII Redactor (Security Layer 2)
-def pii_redact_node(state:AgentState)->dict:
-    """remove personal info (names, phones, emails) from query"""
+    is_safe, threat, events = check_safety(state.get("query", ""))
+    current_events = state.get("security_events", [])
+    return {"is_safe": is_safe, "threat_type": threat, "security_events": current_events + events}
+
+def pii_redact_node(state: AgentState) -> dict:
     from security.pii_redactor import redact
-    clean = redact(state["query"])
-    return {"sanitize_query":clean}
+    clean = redact(state.get("query", ""))
+    return {"sanitized_query": clean}
 
-# NODE 3: Planner (breaks down complex questions)
-def planner_node(state:AgentState)->dict:
-    """ Understands intent and creates sub-questions """
+def planner_node(state: AgentState) -> dict:
     from agents.planner import plan
-    intent, subs = plan(state['query'])
-    return {
-        "intent":intent,
-        "sub_query":subs
-    }
+    intent, subs = plan(state.get("sanitized_query", ""))
+    return {"intent": intent, "sub_queries": subs}
 
-def retriever_node(state:AgentState)->dict:
-    """retrieve document from the database"""
-    from agents.retriever import search_db
-    docs = search_db(state['sub_query'], [])
-    return {"documents":docs}
+def retriever_node(state: AgentState) -> dict:
+    from agents.retriever import retrieve_docs
+    docs = retrieve_docs(state.get("sub_queries", []))
+    return {"retrieved_docs": docs}
 
-def generator_node(state:AgentState)->dict:
+def generator_node(state: AgentState) -> dict:
     from agents.critic_generator import generate_response
-    response = generate_response(state["sanitized_query"], state["retrieved_docs"], [])
+    resp = generate_response(state.get("sanitized_query", ""), state.get("retrieved_docs", []))
+    return {"draft_response": resp}
 
-def validator_node(state:AgentState)->dict:
+def validator_node(state: AgentState) -> dict:
     from security.output_validator import validate_output
-    is_valid, reason = validate_output(state["draft_response"], state["intent"])
+    is_valid, reason = validate_output(state.get("draft_response", ""))
     if is_valid:
-        return {"final_response":state["draft_response"]}
+        return {"final_response": state.get("draft_response")}
     else:
-        return {
-            "final_response":f"Response blocked by Output Validator : {reason}"
-        }
+        return {"final_response": f"Response blocked by Output Validator: {reason}"}
 
-def blocked_response(state:AgentState)->dict:
-    return {
-        "final_response":"Your response is bloacked by our security policy"
-    }
+def blocked_response(state: AgentState) -> dict:
+    return {"final_response": "Your request was blocked by our security policy."}
 
-def route_guard(state:AgentState)-> str:
-    """direct node to next stage based on security level"""
-    return "pii_redact" if state["is_safe"] else END
+# --- Conditional Edges ---
+def route_guard(state: AgentState) -> str:
+    return "pii_redact" if state.get("is_safe", False) else "blocked_response"
 
-#  BUILD THE GRAPH
-
+# --- Build Graph ---
 def build_graph():
+    memory = MemorySaver()
     g = StateGraph(AgentState)
-    # Add Node
-    g.add_node("guard", prompt_gaurd)
+    
+    g.add_node("guard", prompt_guard)
     g.add_node("pii_redact", pii_redact_node)
     g.add_node("planner", planner_node)
     g.add_node("retriever", retriever_node)
     g.add_node("generator", generator_node)
     g.add_node("validator", validator_node)
     g.add_node("blocked_response", blocked_response)
-    
-
 
     g.add_edge(START, "guard")
     g.add_conditional_edges("guard", route_guard)
@@ -86,6 +67,6 @@ def build_graph():
     g.add_edge("validator", END)
     g.add_edge("blocked_response", END)
 
-    return g.compile()
+    return g.compile(checkpointer=memory)
 
-app = build_graph()  # This is what main.py imports
+app = build_graph()

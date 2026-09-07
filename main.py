@@ -16,35 +16,33 @@ def verify_api_key(api_key: str = Security(api_key_header)):
     return api_key
 
 class QueryRequest(BaseModel):
-    query: str
+    message: str
     user_id: str = "anonymous"
     session_id: str = "default_session"
-
-@api.get("/")
-def read_root():
-    return {"message": "Welcome to SecureAgentRAG API", "docs": "/docs", "health": "/health"}
+    thread_id: str = "default_thread"
 
 @api.get("/health")
 def health():
     return {"status": "ok", "model": settings.model_name}
 
-@api.post("/query")
-async def query(req: QueryRequest, api_key: str = Depends(verify_api_key)):
+@api.post("/api/chat")
+async def chat(req: QueryRequest, api_key: str = Depends(verify_api_key)):
     # Setup initial state
     state = {
-        "query": req.query, 
+        "query": req.message, 
         "user_id": req.user_id, 
         "session_id": req.session_id,
+        "thread_id": req.thread_id,
         "security_events": [],
         "iteration_count": 0
     }  
     
-    # Execute LangGraph pipeline with session memory
-    config = {"configurable": {"thread_id": req.session_id}}
+    # Execute LangGraph pipeline with session and thread memory
+    config = {"configurable": {"thread_id": req.thread_id, "session_id": req.session_id}}
     result = await agent_graph.ainvoke(state, config=config)
     
     return {
-        "response": result.get('final_response', 'Request failed.'),
+        "generation": result.get('final_response', 'Request failed.'),
         "safe": result.get('is_safe', False),
         "threat_type": result.get('threat_type')
     }
