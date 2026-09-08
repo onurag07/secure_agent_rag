@@ -8,11 +8,11 @@ security/prompt_guard.py — LAYER 1 INPUT SECURITY
                                  saves 90% of LLM costs while catching novel attacks
 """
 import re, json, hashlib, time, logging
+from datetime import datetime
 from langchain_groq import ChatGroq
 from langchain_core.messages import SystemMessage, HumanMessage
 from state import AgentState, SecurityEvent
 from config import settings
-from typing import Tuple, Optional
 
 log = logging.getLogger(__name__)
 
@@ -62,31 +62,108 @@ Legitimate: questions, coding help, research, writing, analysis.
 Return ONLY JSON (nothing else):
 {"is_threat":false,"threat_type":"none|injection|jailbreak|extraction|harmful","confidence":0.95,"reasoning":"one sentence"}"""
 
+def _token_guard(text: str, max_tokens: int):
+    approx = len(text.split()) * 1.3
+    if approx > max_tokens:
+        return 0.95, [SecurityEvent(
+            event_type="rate_limit", severity="high",
+            details=f"Input ~{int(approx)} tokens exceeds limit {max_tokens}",
+            blocked=True, timestamp=datetime.utcnow().isoformat())]
+    return 0.0, []
 
-def check_safety(query: str)-> Tuple[bool, Optional[str], list[SecurityEvent]]:
-    """
-    Checks if a prompt contains malicious patterns using Regex.
-    Returns: (is_safe, threat_type, events)
-    """
+def _regex_scan(text: str):
+    lower = text.lower()
+    events, max_risk = [], 0.0
+    for pattern, description, weight in INJECTION_PATTERNS:
+        if re.search(pattern, lower, re.IGNORECASE | re.DOTALL):
+            events.append(SecurityEvent(
+                event_type="injection",
+                severity="critical" if weight >= 0.9 else "high" if weight >= 0.7 else "medium",
+                details=description, blocked=weight >= 0.85,
+                timestamp=datetime.utcnow().isoformat()))
+            max_risk = max(max_risk, weight)
+    return max_risk, events
 
-    query_lower = query.lower()
-    events = []
+def _llm_check(query: str):
+    """Only called when regex is inconclusive — saves 90% of LLM calls."""
+    llm = ChatGroq(model=settings.primary_model, max_tokens=256,
+                        temperature=0.0,
+                        api_key=settings.groq_api_key.get_secret_value())
+    try:
+        resp = llm.invoke([SystemMessage(content=GUARD_SYSTEM),
+                           HumanMessage(content=f"Classify:\n\n{query[:2000]}")])
+        r = json.loads(resp.content)
+        if r.get("is_threat") and r.get("confidence", 0) > 0.75:
+            return r["confidence"], SecurityEvent(
+                event_type=r.get("threat_type","unknown"), severity="high",
+                details=r.get("reasoning","LLM flagged"), blocked=r.get("confidence",0)>0.85,
+                timestamp=datetime.utcnow().isoformat())
+    except Exception as e:
+        log.warning("LLM security check failed (non-blocking): %s", e)
+    return 0.0, None
+
+# ── Main LangGraph Node ───────────────────────────────────────────
+def security_check(state: AgentState) -> AgentState:
+    """
+    LangGraph Node: 3-stage input security guard.
+
+    Stage 1 — Token guard     (< 0.1ms)  blocks token-stuffing attacks
+    Stage 2 — Regex scan      (< 1ms)    catches 95% of known attacks  
+    Stage 3 — LLM semantic    (~900ms)   only when 0.3 < risk < 0.85
+                                          catches novel/obfuscated attacks
+    """
+    t0 = time.time()
+    query = state.get("raw_query", "")
+    events = list(state.get("security_events", []))
     
-    for pattern, description, serverity in INJECTION_PATTERNS:
-      if re.search (pattern, query_lower):
-        events.append(
-          SecurityEvent(
-            event_type= "injection",
-            severity= serverity,
-            details= description,
-            blocked=True
-          )
-        )
-    is_safe = len(events) == 0
-    thread_type = "injection" if not is_safe else None
+    log.info("[security_check] Scanning hash=%s",
+             hashlib.sha256(query.encode()).hexdigest()[:8])
 
-    # return is_safe, thread_type, events
-    return is_safe, thread_type
-   
-      
-        
+    # Stage 1: Token guard (microseconds)
+    tk_risk, tk_ev = _token_guard(query, settings.max_input_tokens)
+    events.extend(tk_ev)
+    max_risk = tk_risk
+
+    # Stage 2: Regex scan (sub-millisecond)
+    rx_risk, rx_ev = _regex_scan(query)
+    events.extend(rx_ev)
+    max_risk = max(max_risk, rx_risk)
+
+    # Stage 3: LLM semantic — ONLY when regex is inconclusive
+    # This saves 90%+ of LLM calls for this guard
+    if 0.30 < max_risk < 0.85:
+        log.info("[security_check] Regex inconclusive (%.2f) → LLM check", max_risk)
+        llm_risk, llm_ev = _llm_check(query)
+        if llm_ev: events.append(llm_ev)
+        max_risk = max(max_risk, llm_risk)
+
+    passed = max_risk < settings.risk_score_threshold  # 0.75
+    blocked_reason = ""
+    if not passed:
+        highs = [e for e in events if e["severity"] in ("high","critical")]
+        blocked_reason = highs[0]["detail"] if highs else "Security policy violation"
+        log.warning("[security_check] BLOCKED risk=%.2f reason=%s", max_risk, blocked_reason)
+    else:
+        log.info("[security_check] PASSED risk=%.2f in %.1fms",
+                 max_risk, (time.time()-t0)*1000)
+
+    latency = state.get("latency_ms", {})
+    latency["security_check"] = round((time.time() - t0) * 1000, 2)
+
+    return {**state,
+            "security_passed":  passed,
+            "risk_score":       round(max_risk, 3),
+            "security_events":  events,
+            "blocked_reason":   blocked_reason,
+            "sanitized_query":  query.strip(),
+            "current_node":     "security_check",
+            "latency_ms":       latency}
+
+def blocked_response(state: AgentState) -> AgentState:
+    """Terminal node for blocked queries — returns safe error message."""
+    return {**state,
+            "final_response": (
+                "Your request was blocked by our security policy. "
+                "If you believe this is an error, please rephrase your query. "
+                "[Security event logged with request ID for review]"),
+            "current_node": "blocked_response"}

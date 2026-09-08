@@ -7,10 +7,12 @@ RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
 COPY requirements.txt .
+RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
 RUN pip install --no-cache-dir -r requirements.txt          # Layer cached
 RUN python -m spacy download en_core_web_sm                 # Pre-download
 RUN python -c "from sentence_transformers import SentenceTransformer; \
     SentenceTransformer('BAAI/bge-small-en-v1.5')"
+
 
 # STAGE 2: Production — no build tools, smaller, secure
 FROM python:3.11-slim AS production

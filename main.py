@@ -5,7 +5,7 @@ from graph import app as agent_graph
 from config import settings
 import os
 from observability import bootstrap_langsmith
-
+from cache import get_cached_response, set_cached_response
 
 app = FastAPI(title="SecureAgentRAG", version="2.0")
 
@@ -36,26 +36,22 @@ def health():
     return {"status": "ok", "model": settings.model_name}
 
 @app.post("/api/chat")
+@app.post("/api/chat")
 async def chat(req: QueryRequest, api_key: str = Depends(verify_api_key)):
-    # Setup initial state
-    state = {
-        "query": req.message, 
-        "user_id": req.user_id, 
-        "session_id": req.session_id,
-        "thread_id": req.thread_id,
-        "security_events": [],
-        "iteration_count": 0
-    }  
-    
-    # Execute LangGraph pipeline with session and thread memory
+    cached = get_cached_response(req.message)
+    if cached:
+        return {"generation": cached, "safe": True, "threat_type": None, "cached": True}
+
+    state = {"query": req.message, "user_id": req.user_id, "session_id": req.session_id,
+              "thread_id": req.thread_id, "security_events": [], "iteration_count": 0}
     config = {"configurable": {"thread_id": req.thread_id, "session_id": req.session_id}}
     result = await agent_graph.ainvoke(state, config=config)
-    
-    return {
-        "generation": result.get('final_response', 'Request failed.'),
-        "safe": result.get('is_safe', False),
-        "threat_type": result.get('threat_type')
-    }
+
+    final = result.get("final_response", "Request failed.")
+    if result.get("is_safe", False):
+        set_cached_response(req.message, final)  # don't cache blocked/error responses
+
+    return {"generation": final, "safe": result.get("is_safe", False), "threat_type": result.get("threat_type")}
 
 if __name__ == "__main__":
     import uvicorn

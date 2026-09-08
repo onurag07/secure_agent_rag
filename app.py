@@ -31,6 +31,22 @@ with st.sidebar:
     st.success("Vector Database Connected")
     st.info("Hybrid Search (HNSW) Active")
 
+    st.divider()
+    st.header("📎 Add to Knowledge Base")
+    uploaded = st.file_uploader("Upload a .txt file to ingest into RAG", type=["txt"])
+    if uploaded and st.button("Ingest File"):
+        with st.spinner("Indexing..."):
+            resp = requests.post(
+                "http://localhost:8000/api/ingest",
+                headers={"X-API-Key": settings.secret_key},
+                files={"file": (uploaded.name, uploaded.getvalue())},
+                timeout=30
+            )
+        if resp.status_code == 200:
+            st.success(f"Indexed {resp.json()['chars']} chars from {uploaded.name}")
+        else:
+            st.error(f"Ingest failed: {resp.status_code}")
+
 # Render existing messages
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
@@ -58,7 +74,6 @@ if prompt := st.chat_input("Ask a secure question..."):
                     },
                     timeout=30
                 )
-
                 if response.status_code == 200:
                     data = response.json()
                     answer = data.get("generation", "I couldn't generate an answer.")

@@ -798,7 +798,7 @@ find . -name "*.py" | head -20</pre></div>
       <div>
         <div style="font-size:.78rem;font-weight:700;color:var(--t0);margin-bottom:.4rem">🐍 Option A: Python (quickest for development)</div>
         <div class="code-wrap"><button class="cp" onclick="cpEl(this)">Copy</button><pre>source venv/bin/activate
-uvicorn main:api --reload --port 8000
+uvicorn main:app --reload --port 8000
 # Open: http://localhost:8000/docs</pre></div>
       </div>
       <div>
@@ -812,7 +812,11 @@ uvicorn main:api --reload --port 8000
       <div class="code-wrap"><button class="cp" onclick="cpEl(this)">Copy</button><pre>curl http://localhost:8000/health
 # Expected: {"status":"ok","model":"llama-3.3-70b-versatile"}
 
-curl -X POST http://localhost:8000/query   -H "Content-Type: application/json"   -d '{'query': 'What is RAG?', 'user_id': 'test'}'</pre></div>
+curl -X POST http://localhost:8000/api/chat \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: $SECRET_KEY" \
+  -d '{"message": "What is RAG?", "user_id": "test"}'
+# $SECRET_KEY must match the SECRET_KEY value in your .env</pre></div>
     </div>
     <div style="background:rgba(5,150,105,.08);border:1px solid rgba(5,150,105,.2);border-radius:8px;padding:.75rem;font-size:.76rem;color:#065f46;margin-top:.75rem">✅ <strong>Congratulations!</strong> Your SecureAgentRAG is running. Now use the sidebar steps 01&ndash;21 to understand each component in depth.</div>
   </div>
@@ -822,7 +826,7 @@ curl -X POST http://localhost:8000/query   -H "Content-Type: application/json"  
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:.5rem">
       <div style="background:var(--bg1);border:1px solid var(--b1);border-radius:8px;padding:.6rem"><div style="font-size:.68rem;font-weight:700;color:var(--t2);text-transform:uppercase;margin-bottom:.25rem">Activate venv</div><div class="code-wrap" style="margin:0"><button class="cp" onclick="cpEl(this)">Copy</button><pre style="margin:0;padding:.35rem">source venv/bin/activate</pre></div></div>
       <div style="background:var(--bg1);border:1px solid var(--b1);border-radius:8px;padding:.6rem"><div style="font-size:.68rem;font-weight:700;color:var(--t2);text-transform:uppercase;margin-bottom:.25rem">Install packages</div><div class="code-wrap" style="margin:0"><button class="cp" onclick="cpEl(this)">Copy</button><pre style="margin:0;padding:.35rem">pip install -r requirements.txt</pre></div></div>
-      <div style="background:var(--bg1);border:1px solid var(--b1);border-radius:8px;padding:.6rem"><div style="font-size:.68rem;font-weight:700;color:var(--t2);text-transform:uppercase;margin-bottom:.25rem">Run dev server</div><div class="code-wrap" style="margin:0"><button class="cp" onclick="cpEl(this)">Copy</button><pre style="margin:0;padding:.35rem">uvicorn main:api --reload</pre></div></div>
+      <div style="background:var(--bg1);border:1px solid var(--b1);border-radius:8px;padding:.6rem"><div style="font-size:.68rem;font-weight:700;color:var(--t2);text-transform:uppercase;margin-bottom:.25rem">Run dev server</div><div class="code-wrap" style="margin:0"><button class="cp" onclick="cpEl(this)">Copy</button><pre style="margin:0;padding:.35rem">uvicorn main:app --reload</pre></div></div>
       <div style="background:var(--bg1);border:1px solid var(--b1);border-radius:8px;padding:.6rem"><div style="font-size:.68rem;font-weight:700;color:var(--t2);text-transform:uppercase;margin-bottom:.25rem">Docker all services</div><div class="code-wrap" style="margin:0"><button class="cp" onclick="cpEl(this)">Copy</button><pre style="margin:0;padding:.35rem">docker compose up --build</pre></div></div>
       <div style="background:var(--bg1);border:1px solid var(--b1);border-radius:8px;padding:.6rem"><div style="font-size:.68rem;font-weight:700;color:var(--t2);text-transform:uppercase;margin-bottom:.25rem">Run tests</div><div class="code-wrap" style="margin:0"><button class="cp" onclick="cpEl(this)">Copy</button><pre style="margin:0;padding:.35rem">pytest tests/ -v</pre></div></div>
       <div style="background:var(--bg1);border:1px solid var(--b1);border-radius:8px;padding:.6rem"><div style="font-size:.68rem;font-weight:700;color:var(--t2);text-transform:uppercase;margin-bottom:.25rem">Save packages</div><div class="code-wrap" style="margin:0"><button class="cp" onclick="cpEl(this)">Copy</button><pre style="margin:0;padding:.35rem">pip freeze > requirements.txt</pre></div></div>
@@ -834,8 +838,10 @@ curl -X POST http://localhost:8000/query   -H "Content-Type: application/json"  
   <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:2.5rem;padding-top:1.2rem;border-top:2px solid var(--b1);flex-wrap:wrap">
     <button onclick="go(21)" style="background:var(--bg2);border:1px solid var(--b2);color:var(--t0);padding:.55rem 1.1rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       ← 21 · pgvector Integration
+    </button>
     <button onclick="go(1)" style="background:linear-gradient(135deg,#6366f1,#0891b2);color:#fff;border:none;padding:.55rem 1.2rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       01 · Overview →
+    </button>
   </div>
 </div>
 
@@ -908,8 +914,10 @@ curl -X POST http://localhost:8000/query   -H "Content-Type: application/json"  
   <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:2.5rem;padding-top:1.2rem;border-top:2px solid var(--b1);flex-wrap:wrap">
     <button onclick="go(0)" style="background:var(--bg2);border:1px solid var(--b2);color:var(--t0);padding:.55rem 1.1rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       ← 00 · Setup Guide
+    </button>
     <button onclick="go(2)" style="background:linear-gradient(135deg,#6366f1,#0891b2);color:#fff;border:none;padding:.55rem 1.2rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       02 · Architecture & State →
+    </button>
   </div>
 </div>
 
@@ -1005,14 +1013,17 @@ def build_graph():
 
     memory = MemorySaver()
     return g.compile(checkpointer=memory, interrupt_before=["human_review"])</pre></div>
+  <div class="ib ib-note"><span class="ib-ico">ℹ️</span><span>This diagram is the target architecture — Step 05's actual code ships a simpler 6-node linear version, and uses different node names (<code>guard</code>, <code>planner_node</code>, etc.) than shown here. For working code that actually builds the <code>HyDE+BM25+RRF</code> retriever, the critic→rewriter loop, and the L3 hallucination+harm validator shown above, see <strong>Step 22 → "Closing the Advertised Gaps"</strong>.</span></div>
   <div class="nav-footer"><button class="nav-btn" onclick="go(1)">← Prev</button><button class="nav-btn pri" onclick="go(3)">Next: Security →</button></div>
 
   <!-- 🔘 PREV/NEXT ACTION BUTTONS FOR STEP 2 -->
   <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:2.5rem;padding-top:1.2rem;border-top:2px solid var(--b1);flex-wrap:wrap">
     <button onclick="go(1)" style="background:var(--bg2);border:1px solid var(--b2);color:var(--t0);padding:.55rem 1.1rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       ← 01 · Overview
+    </button>
     <button onclick="go(3)" style="background:linear-gradient(135deg,#6366f1,#0891b2);color:#fff;border:none;padding:.55rem 1.2rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       03 · Security Layers →
+    </button>
   </div>
 </div>
 <!-- ════ S3: SECURITY ════ -->
@@ -1137,7 +1148,7 @@ def _token_guard(text: str, max_tokens: int):
     if approx > max_tokens:
         return 0.95, [SecurityEvent(
             event_type="rate_limit", severity="high",
-            detail=f"Input ~{int(approx)} tokens exceeds limit {max_tokens}",
+            details=f"Input ~{int(approx)} tokens exceeds limit {max_tokens}",
             blocked=True, timestamp=datetime.utcnow().isoformat())]
     return 0.0, []
 
@@ -1149,7 +1160,7 @@ def _regex_scan(text: str):
             events.append(SecurityEvent(
                 event_type="injection",
                 severity="critical" if weight >= 0.9 else "high" if weight >= 0.7 else "medium",
-                detail=description, blocked=weight >= 0.85,
+                details=description, blocked=weight >= 0.85,
                 timestamp=datetime.utcnow().isoformat()))
             max_risk = max(max_risk, weight)
     return max_risk, events
@@ -1166,7 +1177,7 @@ def _llm_check(query: str):
         if r.get("is_threat") and r.get("confidence", 0) > 0.75:
             return r["confidence"], SecurityEvent(
                 event_type=r.get("threat_type","unknown"), severity="high",
-                detail=r.get("reasoning","LLM flagged"), blocked=r.get("confidence",0)>0.85,
+                details=r.get("reasoning","LLM flagged"), blocked=r.get("confidence",0)>0.85,
                 timestamp=datetime.utcnow().isoformat())
     except Exception as e:
         log.warning("LLM security check failed (non-blocking): %s", e)
@@ -1245,8 +1256,10 @@ def blocked_response(state: AgentState) -> AgentState:
   <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:2.5rem;padding-top:1.2rem;border-top:2px solid var(--b1);flex-wrap:wrap">
     <button onclick="go(2)" style="background:var(--bg2);border:1px solid var(--b2);color:var(--t0);padding:.55rem 1.1rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       ← 02 · Architecture & State
+    </button>
     <button onclick="go(4)" style="background:linear-gradient(135deg,#6366f1,#0891b2);color:#fff;border:none;padding:.55rem 1.2rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       04 · Tech Stack →
+    </button>
   </div>
 </div>
 <!-- ════ S4-S15 COMBINED (condensed) ════ -->
@@ -1286,8 +1299,10 @@ def blocked_response(state: AgentState) -> AgentState:
   <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:2.5rem;padding-top:1.2rem;border-top:2px solid var(--b1);flex-wrap:wrap">
     <button onclick="go(3)" style="background:var(--bg2);border:1px solid var(--b2);color:var(--t0);padding:.55rem 1.1rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       ← 03 · Security Layers
+    </button>
     <button onclick="go(5)" style="background:linear-gradient(135deg,#6366f1,#0891b2);color:#fff;border:none;padding:.55rem 1.2rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       05 · Core Code Implementation →
+    </button>
   </div>
 </div>
 
@@ -1447,7 +1462,7 @@ def check_safety(query: str) -> Tuple[bool, Optional[str], list[SecurityEvent]]:
             events.append(SecurityEvent(
                 event_type="injection",
                 severity=severity,
-                detail=description,
+                details=description,
                 blocked=True
             ))
             
@@ -1578,6 +1593,11 @@ def retrieve_docs(sub_queries: list[str]) -> list[dict]:
     # Deduplicate and sort by score
     unique_docs = {doc["content"]: doc for doc in all_docs}.values()
     return sorted(unique_docs, key=lambda x: x["score"], reverse=True)
+
+def add_document(text: str) -> None:
+    """Called by POST /api/ingest — this is the file upload feature for RAG.
+    Chroma computes the embedding and persists it to ./chroma_data automatically."""
+    vector_store.add_texts(texts=[text])
 </pre></div>
     </div>
 
@@ -1698,14 +1718,21 @@ from pydantic import BaseModel
 from graph import app as agent_graph
 from config import settings
 import os
+from observability import bootstrap_langsmith
 
-api = FastAPI(title="SecureAgentRAG", version="2.0")
+app = FastAPI(title="SecureAgentRAG", version="2.0")
+
+@app.on_event("startup")
+async def startup():
+    # Bootstrap LangSmith tracing at application start.
+    # After this: every LangGraph node run is automatically traced.
+    bootstrap_langsmith()
 
 # --- AUTHENTICATION ---
-api_key_header = APIKeyHeader(name="X-API-Key")
+api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 
 def verify_api_key(api_key: str = Security(api_key_header)):
-    if api_key != settings.secret_key:
+    if not api_key or api_key != settings.secret_key:
         raise HTTPException(status_code=403, detail="Invalid API Key")
     return api_key
 
@@ -1715,38 +1742,54 @@ class QueryRequest(BaseModel):
     session_id: str = "default_session"
     thread_id: str = "default_thread"
 
-@api.get("/health")
+@app.get("/health")
+@app.get("/api/v1/health")
 def health():
     return {"status": "ok", "model": settings.model_name}
 
-@api.post("/api/chat")
+@app.post("/api/chat")
 async def chat(req: QueryRequest, api_key: str = Depends(verify_api_key)):
     # Setup initial state
     state = {
-        "query": req.message, 
-        "user_id": req.user_id, 
+        "query": req.message,
+        "user_id": req.user_id,
         "session_id": req.session_id,
         "thread_id": req.thread_id,
         "security_events": [],
         "iteration_count": 0
-    }  
-    
+    }
+
     # Execute LangGraph pipeline with session and thread memory
     config = {"configurable": {"thread_id": req.thread_id, "session_id": req.session_id}}
     result = await agent_graph.ainvoke(state, config=config)
-    
+
     return {
         "generation": result.get('final_response', 'Request failed.'),
         "safe": result.get('is_safe', False),
         "threat_type": result.get('threat_type')
     }
 
+# --- FILE UPLOAD / RAG INGESTION ---
+# There is no upload endpoint anywhere else in this project — retriever.py only ever
+# seeds 3 hardcoded sentences. This is what "add documents to the RAG" actually is.
+from fastapi import UploadFile, File
+
+@app.post("/api/ingest")
+async def ingest(file: UploadFile = File(...), api_key: str = Depends(verify_api_key)):
+    from agents.retriever import add_document
+    raw = await file.read()
+    text = raw.decode("utf-8", errors="ignore")
+    if not text.strip():
+        raise HTTPException(status_code=400, detail="File is empty or not readable as text.")
+    add_document(text)
+    return {"status": "indexed", "filename": file.filename, "chars": len(text)}
+
 if __name__ == "__main__":
     import uvicorn
     # Make sure GROQ_API_KEY is available in environment
     if not os.getenv("GROQ_API_KEY"):
         print("WARNING: GROQ_API_KEY not found in environment!")
-    uvicorn.run("main:api", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
 </pre></div>
     </div>
 
@@ -1756,10 +1799,10 @@ if __name__ == "__main__":
 <pre>.PHONY: run dev test lint format docker-up docker-down
 
 run:
-	uvicorn main:api --host 0.0.0.0 --port 8000
+	uvicorn main:app --host 0.0.0.0 --port 8000
 
 dev:
-	uvicorn main:api --host 0.0.0.0 --port 8000 --reload
+	uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
 test:
 	pytest tests/ -v --cov=.
@@ -1820,8 +1863,10 @@ def test_pii_redactor():
   <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:2.5rem;padding-top:1.2rem;border-top:2px solid var(--b1);flex-wrap:wrap">
     <button onclick="go(4)" style="background:var(--bg2);border:1px solid var(--b2);color:var(--t0);padding:.55rem 1.1rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       ← 04 · Tech Stack
+    </button>
     <button onclick="go(6)" style="background:linear-gradient(135deg,#6366f1,#0891b2);color:#fff;border:none;padding:.55rem 1.2rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       06 · LangSmith →
+    </button>
   </div>
 </div>
 <!-- ════ S6-S9 LANGSMITH ════ -->
@@ -1902,14 +1947,24 @@ def create_eval_dataset_from_traces(project_name, dataset_name, filter_tags=None
         )
     return dataset.id</pre></div>
   </div>
+  <div class="ib ib-warn" style="margin-top:1.1rem"><div class="ib-ico">⚠️</div><div><strong>Don't skip this:</strong> <code>main.py</code> does <code>from observability import bootstrap_langsmith</code> — importing from the <em>package</em>, not the submodule. That only works if <code>observability/__init__.py</code> re-exports it. An empty <code>__init__.py</code> (from the <code>touch</code> command in Step 00) will crash on startup with <code>ImportError: cannot import name 'bootstrap_langsmith' from 'observability'</code>.</div></div>
+  <div class="card" style="margin-top:1.1rem">
+    <div class="c-ti" style="margin-bottom:.75rem">📝 observability/__init__.py</div>
+    <div class="code-wrap"><button class="cp" onclick="cpEl(this)">Copy</button>
+<pre>from observability.langsmith_config import bootstrap_langsmith, create_eval_dataset_from_traces
+
+__all__ = ["bootstrap_langsmith", "create_eval_dataset_from_traces"]</pre></div>
+  </div>
   <div class="nav-footer"><button class="nav-btn" onclick="go(5)">← Prev</button><button class="nav-btn pri" onclick="go(7)">Next: Traces →</button></div>
 
   <!-- 🔘 PREV/NEXT ACTION BUTTONS FOR STEP 6 -->
   <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:2.5rem;padding-top:1.2rem;border-top:2px solid var(--b1);flex-wrap:wrap">
     <button onclick="go(5)" style="background:var(--bg2);border:1px solid var(--b2);color:var(--t0);padding:.55rem 1.1rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       ← 05 · Core Code Implementation
+    </button>
     <button onclick="go(7)" style="background:linear-gradient(135deg,#6366f1,#0891b2);color:#fff;border:none;padding:.55rem 1.2rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       07 · LangSmith Tracing →
+    </button>
   </div>
 </div>
 
@@ -1955,8 +2010,10 @@ def create_eval_dataset_from_traces(project_name, dataset_name, filter_tags=None
   <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:2.5rem;padding-top:1.2rem;border-top:2px solid var(--b1);flex-wrap:wrap">
     <button onclick="go(6)" style="background:var(--bg2);border:1px solid var(--b2);color:var(--t0);padding:.55rem 1.1rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       ← 06 · LangSmith Setup
+    </button>
     <button onclick="go(8)" style="background:linear-gradient(135deg,#6366f1,#0891b2);color:#fff;border:none;padding:.55rem 1.2rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       08 · Custom Evaluators →
+    </button>
   </div>
 </div>
 
@@ -1997,7 +2054,9 @@ print(results)
   <div class="card" style="margin-top:1.1rem">
     <div class="c-ti" style="margin-bottom:.75rem">📝 observability/evaluators.py</div>
     <div class="code-wrap"><button class="cp" onclick="cpEl(this)">Copy</button>
-<pre>from langsmith.evaluation import evaluate, LangChainStringEvaluator
+<pre>from langsmith.evaluation import evaluate
+# Note: LangChainStringEvaluator was removed from newer langsmith SDK
+# versions (0.2+). Write evaluators as plain functions instead.
 
 def exact_match_evaluator(run, example):
     """Custom exact match evaluator (e.g., for PII/Security safety checks)."""
@@ -2007,23 +2066,27 @@ def exact_match_evaluator(run, example):
 
 def run_all_evaluators(dataset_name, experiment_prefix):
     """Runs all custom evaluators against a LangSmith dataset."""
-    # Built-in LLM-as-a-judge evaluators
-    qa_evaluator = LangChainStringEvaluator("qa")
-    context_evaluator = LangChainStringEvaluator("context_qa")
-    
-    # Mock prediction function - replace with your LangGraph entry point
-    # e.g., from main import app; return app.invoke(inputs)
+    import asyncio
+    from graph import app as agent_graph
+
     def predict(inputs):
-        return {"output": "Mock pipeline response based on input"}
+        # Real entry point — same graph main.py's /api/chat calls, run synchronously here
+        # since LangSmith's evaluate() expects a plain sync function.
+        state = {"query": inputs["query"], "user_id": "eval", "session_id": "eval",
+                  "thread_id": "eval", "security_events": [], "iteration_count": 0}
+        config = {"configurable": {"thread_id": "eval", "session_id": "eval"}}
+        result = asyncio.run(agent_graph.ainvoke(state, config=config))
+        return {"output": result.get("final_response", "")}
 
     # Execute the evaluation
     results = evaluate(
         predict,
         data=dataset_name,
-        evaluators=[qa_evaluator, context_evaluator, exact_match_evaluator],
+        evaluators=[exact_match_evaluator],
         experiment_prefix=experiment_prefix,
     )
     return results</pre></div>
+    <div class="ib ib-tip" style="margin-top:.6rem"><span class="ib-ico">💡</span><span><strong>Where to call this from:</strong> it's not part of the request path — run it as a one-off command (or a CI step after deploy), e.g. <code>python -c "from observability.evaluators import run_all_evaluators; run_all_evaluators('secure-agent-rag-eval-v1','deploy-test')"</code>. It needs a LangSmith dataset named <code>secure-agent-rag-eval-v1</code> to already exist — create one from production traces with <code>create_eval_dataset_from_traces()</code> in <code>observability/langsmith_config.py</code> first.</span></div>
   </div>
   <div class="nav-footer"><button class="nav-btn" onclick="go(7)">← Prev</button><button class="nav-btn pri" onclick="go(9)">Next: Feedback →</button></div>
 
@@ -2031,8 +2094,10 @@ def run_all_evaluators(dataset_name, experiment_prefix):
   <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:2.5rem;padding-top:1.2rem;border-top:2px solid var(--b1);flex-wrap:wrap">
     <button onclick="go(7)" style="background:var(--bg2);border:1px solid var(--b2);color:var(--t0);padding:.55rem 1.1rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       ← 07 · LangSmith Tracing
+    </button>
     <button onclick="go(9)" style="background:linear-gradient(135deg,#6366f1,#0891b2);color:#fff;border:none;padding:.55rem 1.2rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       09 · Feedback & Datasets →
+    </button>
   </div>
 </div>
 
@@ -2079,8 +2144,10 @@ dataset_id = create_eval_dataset_from_traces(
   <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:2.5rem;padding-top:1.2rem;border-top:2px solid var(--b1);flex-wrap:wrap">
     <button onclick="go(8)" style="background:var(--bg2);border:1px solid var(--b2);color:var(--t0);padding:.55rem 1.1rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       ← 08 · Custom Evaluators
+    </button>
     <button onclick="go(10)" style="background:linear-gradient(135deg,#6366f1,#0891b2);color:#fff;border:none;padding:.55rem 1.2rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       10 · Docker Setup →
+    </button>
   </div>
 </div>
 <!-- ════ S10-S15 Docker & Deploy ════ -->
@@ -2139,8 +2206,10 @@ dataset_id = create_eval_dataset_from_traces(
   <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:2.5rem;padding-top:1.2rem;border-top:2px solid var(--b1);flex-wrap:wrap">
     <button onclick="go(9)" style="background:var(--bg2);border:1px solid var(--b2);color:var(--t0);padding:.55rem 1.1rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       ← 09 · Feedback & Datasets
+    </button>
     <button onclick="go(11)" style="background:linear-gradient(135deg,#6366f1,#0891b2);color:#fff;border:none;padding:.55rem 1.2rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       11 · Dockerfile →
+    </button>
   </div>
 </div>
 
@@ -2204,8 +2273,10 @@ CMD ["uvicorn","main:app","--host","0.0.0.0","--port","8000","--workers","2"]</p
   <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:2.5rem;padding-top:1.2rem;border-top:2px solid var(--b1);flex-wrap:wrap">
     <button onclick="go(10)" style="background:var(--bg2);border:1px solid var(--b2);color:var(--t0);padding:.55rem 1.1rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       ← 10 · Docker Setup
+    </button>
     <button onclick="go(12)" style="background:linear-gradient(135deg,#6366f1,#0891b2);color:#fff;border:none;padding:.55rem 1.2rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       12 · Docker Compose →
+    </button>
   </div>
 </div>
 
@@ -2288,8 +2359,10 @@ volumes:
   <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:2.5rem;padding-top:1.2rem;border-top:2px solid var(--b1);flex-wrap:wrap">
     <button onclick="go(11)" style="background:var(--bg2);border:1px solid var(--b2);color:var(--t0);padding:.55rem 1.1rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       ← 11 · Dockerfile
+    </button>
     <button onclick="go(13)" style="background:linear-gradient(135deg,#6366f1,#0891b2);color:#fff;border:none;padding:.55rem 1.2rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       13 · Vercel Deploy →
+    </button>
   </div>
 </div>
 
@@ -2317,6 +2390,7 @@ volumes:
 import uuid
 import requests
 import json
+from config import settings
 
 st.set_page_config(page_title="SecureAgentRAG", page_icon="🛡️")
 st.title("🛡️ SecureAgentRAG Chat")
@@ -2345,6 +2419,22 @@ with st.sidebar:
     st.success("Vector Database Connected")
     st.info("Hybrid Search (HNSW) Active")
 
+    st.divider()
+    st.header("📎 Add to Knowledge Base")
+    uploaded = st.file_uploader("Upload a .txt file to ingest into RAG", type=["txt"])
+    if uploaded and st.button("Ingest File"):
+        with st.spinner("Indexing..."):
+            resp = requests.post(
+                "http://localhost:8000/api/ingest",
+                headers={"X-API-Key": settings.secret_key},
+                files={"file": (uploaded.name, uploaded.getvalue())},
+                timeout=30
+            )
+        if resp.status_code == 200:
+            st.success(f"Indexed {resp.json()['chars']} chars from {uploaded.name}")
+        else:
+            st.error(f"Ingest failed: {resp.status_code}")
+
 # Render existing messages
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
@@ -2364,6 +2454,7 @@ if prompt := st.chat_input("Ask a secure question..."):
                 # The backend API uses the thread_id to resume LangGraph state
                 response = requests.post(
                     "http://localhost:8000/api/chat",
+                    headers={"X-API-Key": settings.secret_key},
                     json={
                         "message": prompt,
                         "thread_id": st.session_state.thread_id,
@@ -2433,8 +2524,10 @@ if prompt := st.chat_input("Ask a secure question..."):
   <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:2.5rem;padding-top:1.2rem;border-top:2px solid var(--b1);flex-wrap:wrap">
     <button onclick="go(13)" style="background:var(--bg2);border:1px solid var(--b2);color:var(--t0);padding:.55rem 1.1rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       ← 13 · Vercel Deploy
+    </button>
     <button onclick="go(15)" style="background:linear-gradient(135deg,#6366f1,#0891b2);color:#fff;border:none;padding:.55rem 1.2rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       15 · Resume Points →
+    </button>
   </div>
 </div>
 
@@ -2465,8 +2558,10 @@ if prompt := st.chat_input("Ask a secure question..."):
   <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:2.5rem;padding-top:1.2rem;border-top:2px solid var(--b1);flex-wrap:wrap">
     <button onclick="go(14)" style="background:var(--bg2);border:1px solid var(--b2);color:var(--t0);padding:.55rem 1.1rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       ← 14 · Railway Deploy
+    </button>
     <button onclick="go(16)" style="background:linear-gradient(135deg,#6366f1,#0891b2);color:#fff;border:none;padding:.55rem 1.2rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       16 · Prompt Chaining →
+    </button>
   </div>
 </div>
 <!-- ════ S16: PROMPT CHAINING ════ -->
@@ -2575,8 +2670,10 @@ full_chain = jd_parser | (lambda skills: {"skills": skills, "resume": resume}) |
   <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:2.5rem;padding-top:1.2rem;border-top:2px solid var(--b1);flex-wrap:wrap">
     <button onclick="go(15)" style="background:var(--bg2);border:1px solid var(--b2);color:var(--t0);padding:.55rem 1.1rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       ← 15 · Resume Points
+    </button>
     <button onclick="go(17)" style="background:linear-gradient(135deg,#6366f1,#0891b2);color:#fff;border:none;padding:.55rem 1.2rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       17 · Multi-Agent Patterns →
+    </button>
   </div>
 </div>
 
@@ -2673,8 +2770,10 @@ def critic_agent(state: AgentState) -> AgentState:
   <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:2.5rem;padding-top:1.2rem;border-top:2px solid var(--b1);flex-wrap:wrap">
     <button onclick="go(16)" style="background:var(--bg2);border:1px solid var(--b2);color:var(--t0);padding:.55rem 1.1rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       ← 16 · Prompt Chaining
+    </button>
     <button onclick="go(18)" style="background:linear-gradient(135deg,#6366f1,#0891b2);color:#fff;border:none;padding:.55rem 1.2rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       18 · Caching Strategy →
+    </button>
   </div>
 </div>
 <!-- ════ S18: CACHING ════ -->
@@ -2695,13 +2794,27 @@ def critic_agent(state: AgentState) -> AgentState:
   <h2 class="sec-title">⚡ 4-Layer Caching for Speed &amp; Cost</h2>
   <p class="sec-body">Caching reduces cost and latency dramatically. Our system uses 4 types of cache, each targeting a different bottleneck.</p>
 
+  <div class="card" style="border-left:4px solid #10b981;background:rgba(16,185,129,.04)">
+    <div style="font-weight:800;color:var(--t0);margin-bottom:.6rem;font-size:.9rem">🚀 Do This Now (3-minute checklist)</div>
+    <table class="tbl" style="font-size:.78rem">
+      <tr><td style="white-space:nowrap"><strong>1. File to create</strong></td><td><code>cache.py</code> — brand new file, project root, right next to <code>config.py</code></td></tr>
+      <tr><td style="white-space:nowrap"><strong>2. Paste in</strong></td><td>The <code>get_cached_response()</code> + <code>set_cached_response()</code> functions from the "Redis Exact-Match Cache" card just below this box</td></tr>
+      <tr><td style="white-space:nowrap"><strong>3. Two settings to add</strong></td><td>Open <code>config.py</code>, add one line inside the <code>Settings</code> class: <code>redis_url: str = "redis://localhost:6379/0"</code></td></tr>
+      <tr><td style="white-space:nowrap"><strong>4. One pip install</strong></td><td><code>pip install redis</code> (and add <code>redis&gt;=5.0.0</code> to <code>requirements.txt</code>)</td></tr>
+      <tr><td style="white-space:nowrap"><strong>5. Call it from</strong></td><td>Open <code>main.py</code>. Inside the existing <code>chat()</code> function (the one with <code>@app.post("/api/chat")</code> on top): add <code>from cache import get_cached_response, set_cached_response</code> at the top of the file, then check the cache as the very first line inside <code>chat()</code>, and save the answer as the very last thing before <code>return</code>. The exact before/after code is in the "Call site" card below.</td></tr>
+      <tr><td style="white-space:nowrap"><strong>6. Proof it works</strong></td><td>Start Redis (<code>docker-compose up -d redis</code>, or install it locally), run the app, ask the exact same question twice. The 2nd reply appears instantly — no "Thinking securely..." spinner delay.</td></tr>
+    </table>
+  </div>
+
+  <div class="ib ib-note"><span class="ib-ico">⚠️</span><span><strong>Correction:</strong> the code below previously used Anthropic's Messages API (<code>anthropic.Groq()</code>, <code>cache_control: ephemeral</code>, <code>claude-sonnet-4-6</code>) — that's a copy-paste from a Claude-based template and does not run against Groq's API at all. This project talks to Groq through <code>langchain_groq.ChatGroq</code> (OpenAI-compatible chat completions), which has <strong>no user-facing <code>cache_control</code> flag</strong> — Groq's speed comes from its LPU hardware, not an app-controllable KV cache. The code samples below are rewritten to be real, runnable caching you can actually add to this project.</span></div>
+
   <div class="cache-grid">
     <div class="cache-card cc1">
-      <span class="saving-badge">Up to 90% cost</span>
-      <div style="font-size:1.2rem;margin-bottom:.4rem">🧠</div>
-      <div class="cache-ti">Groq Response Cache (KV Cache)</div>
-      <div class="cache-body">Cache the system prompt tokens in Groq's infrastructure. On repeated calls with the same system prompt, Claude reuses the computed KV (key-value) attention pairs — no re-processing. Cost: 0.1× of normal prompt tokens.</div>
-      <div><span class="tag tg">Groq Native</span><span class="tag ti">cache_control</span></div>
+      <span class="saving-badge">Instant repeat</span>
+      <div style="font-size:1.2rem;margin-bottom:.4rem">⚡</div>
+      <div class="cache-ti">Redis Exact-Match Cache</div>
+      <div class="cache-body">Hash the raw incoming message → check Redis before touching LangGraph at all. Same question twice in the TTL window → zero LLM calls, near-instant response. This is the highest-value cache for a Groq-backed app since there's no provider-level prompt cache to lean on.</div>
+      <div><span class="tag tg">Redis SET/GET</span><span class="tag ti">cache.py</span></div>
     </div>
     <div class="cache-card cc2">
       <span class="saving-badge">~35% hit rate</span>
@@ -2727,103 +2840,96 @@ def critic_agent(state: AgentState) -> AgentState:
   </div>
 
   <div class="card">
-    <div class="c-ti" style="margin-bottom:.875rem">🧠 Groq Prompt Caching — Biggest Win (up to 90% cost reduction)</div>
-    <div class="ib ib-tip" style="margin-bottom:.875rem"><span class="ib-ico">💡</span><span><strong>How KV Cache works:</strong> When Claude processes a prompt, it computes attention Key-Value pairs for every token. Normally these are discarded. Prompt caching keeps them in memory. Next call with the same prefix → skip recomputation. You pay only 10% of normal input token cost.</span></div>
+    <div class="c-ti" style="margin-bottom:.875rem">⚡ cache.py — Redis Exact-Match Cache (new file, project root)</div>
+    <div class="ib ib-tip" style="margin-bottom:.875rem"><span class="ib-ico">💡</span><span>Reuses the <code>redis</code> service already declared in <code>docker-compose.yml</code> — no new infra, just a thin client. Add <code>redis_url: str = "redis://localhost:6379/0"</code> to <code>Settings</code> in <code>config.py</code>, and <code>redis&gt;=5.0.0</code> to <code>requirements.txt</code>.</span></div>
     <div class="code-wrap"><button class="cp" onclick="cpEl(this)">Copy</button>
-<pre>import anthropic
+<pre>import hashlib
+import redis
+from config import settings
 
-client = anthropic.Groq()
+_r = redis.from_url(settings.redis_url, decode_responses=True)
+TTL_SECONDS = 1800  # 30 min, matches the "Redis Exact Cache" card above
 
-# Our system prompts are LONG (500-1000 tokens each)
-# Without caching: pay full price EVERY call
-# With caching: pay 10% after first call for same prompt
+def _key(message: str) -> str:
+    return "chat_cache:" + hashlib.sha256(message.strip().lower().encode()).hexdigest()
 
-GENERATOR_SYSTEM = """You are an expert AI assistant...
-[500 tokens of detailed instructions about how to generate
- grounded, cited, high-quality responses from retrieved context...]"""
+def get_cached_response(message: str) -> str | None:
+    """Exact-match lookup on the raw user message. None on miss or Redis being unreachable."""
+    try:
+        return _r.get(_key(message))
+    except redis.RedisError:
+        return None  # fail open — cache being down should never break chat
 
-# ── Enable prompt caching with cache_control ──────────────────────
-response = client.messages.create(
-    model="claude-sonnet-4-6",
-    max_tokens=1024,
-    system=[
-        {
-            "type": "text",
-            "text": GENERATOR_SYSTEM,
-            "cache_control": {"type": "ephemeral"}  # ← Cache this!
-        }
-    ],
-    messages=[
-        {"role": "user", "content": f"Context: {context}\n\nQuery: {query}"}
-    ]
-)
+def set_cached_response(message: str, response: str, ttl: int = TTL_SECONDS) -> None:
+    try:
+        _r.setex(_key(message), ttl, response)
+    except redis.RedisError:
+        pass</pre></div>
+    <div class="ib ib-tip" style="margin-top:.6rem"><span class="ib-ico">💡</span><span><strong>Call site</strong> — <code>main.py</code>'s <code>/api/chat</code> handler, wrapping the graph invocation:</span></div>
+    <div class="code-wrap" style="margin-top:.4rem"><button class="cp" onclick="cpEl(this)">Copy</button>
+<pre>from cache import get_cached_response, set_cached_response
 
-# First call:  500 (prompt) + 100 (user) tokens charged at full rate
-# Second call: 500 tokens charged at 0.1× rate → saves 90% on system prompt!
-# LangSmith shows cache_read_input_tokens vs input_tokens in trace
+@app.post("/api/chat")
+async def chat(req: QueryRequest, api_key: str = Depends(verify_api_key)):
+    cached = get_cached_response(req.message)
+    if cached:
+        return {"generation": cached, "safe": True, "threat_type": None, "cached": True}
 
-# ── Cost comparison ───────────────────────────────────────────────
-# Without caching (1000 calls/day, 500-token system prompt):
-#   Cost = 1000 × 500 × $0.003/1k = $1.50/day on prompt alone
+    state = {"query": req.message, "user_id": req.user_id, "session_id": req.session_id,
+              "thread_id": req.thread_id, "security_events": [], "iteration_count": 0}
+    config = {"configurable": {"thread_id": req.thread_id, "session_id": req.session_id}}
+    result = await agent_graph.ainvoke(state, config=config)
 
-# With caching (after warmup, ~90% cache hits):
-#   Cost = (100 × 500 × $0.003) + (900 × 500 × $0.0003) = $0.15 + $0.135 = $0.285/day
-#   Savings: 81% reduction in prompt cost!</pre></div>
+    final = result.get("final_response", "Request failed.")
+    if result.get("is_safe", False):
+        set_cached_response(req.message, final)  # don't cache blocked/error responses
+
+    return {"generation": final, "safe": result.get("is_safe", False), "threat_type": result.get("threat_type")}</pre></div>
   </div>
 
   <div class="card">
-    <div class="c-ti" style="margin-bottom:.875rem">🔍 Semantic Cache — Cache by Meaning, Not Exact Text</div>
+    <div class="c-ti" style="margin-bottom:.875rem">🔍 Semantic Cache — Cache by Meaning, Not Exact Text (goes in the same cache.py)</div>
+    <div class="ib ib-note" style="margin-bottom:.875rem"><span class="ib-ico">⚠️</span><span>Fixed two bugs from the previous version of this snippet: missing <code>import hashlib</code>, and <code>run_pipeline()</code> didn't exist — swapped for this project's real async entry point, <code>agent_graph.ainvoke(...)</code>.</span></div>
     <div class="code-wrap"><button class="cp" onclick="cpEl(this)">Copy</button>
-<pre>import redis
+<pre>import hashlib, json
 import numpy as np
 from sentence_transformers import SentenceTransformer
-import json
 
-embedder = SentenceTransformer("BAAI/bge-small-en-v1.5")
-r = redis.from_url("redis://localhost:6379/0")
-
+embedder = SentenceTransformer("all-MiniLM-L6-v2")  # same model retriever.py already loads
 SEMANTIC_CACHE_KEY = "semantic_cache"
 SIMILARITY_THRESHOLD = 0.92   # tune this — higher = stricter matching
 
 class SemanticCache:
     def get(self, query: str) -> str | None:
-        """Return cached response if semantically similar query exists."""
-        q_emb = embedder.encode(query).tolist()
-
-        # Check all cached embeddings
-        cached_keys = r.hkeys(SEMANTIC_CACHE_KEY)
-        for key in cached_keys:
-            cached_data = json.loads(r.hget(SEMANTIC_CACHE_KEY, key))
+        """Return cached response if a semantically similar query exists."""
+        q_emb = embedder.encode(query)
+        for key in _r.hkeys(SEMANTIC_CACHE_KEY):
+            cached_data = json.loads(_r.hget(SEMANTIC_CACHE_KEY, key))
             cached_emb = np.array(cached_data["embedding"])
-            
-            # Cosine similarity
             similarity = np.dot(q_emb, cached_emb) / (
                 np.linalg.norm(q_emb) * np.linalg.norm(cached_emb))
-            
-            if similarity >= SIMILARITY_THRESHOLD:
-                # Cache hit! "What is RAG?" ~ "Explain RAG" → same response
+            if similarity &gt;= SIMILARITY_THRESHOLD:
                 return cached_data["response"]
-        return None  # Cache miss
+        return None
 
-    def set(self, query: str, response: str, ttl: int = 3600):
-        """Store response with embedding for future similarity matching."""
+    def set(self, query: str, response: str) -> None:
         q_emb = embedder.encode(query).tolist()
         cache_id = hashlib.md5(query.encode()).hexdigest()
-        r.hset(SEMANTIC_CACHE_KEY, cache_id,
-               json.dumps({"embedding": q_emb, "response": response, "query": query}))
-        r.expire(SEMANTIC_CACHE_KEY, ttl)
+        _r.hset(SEMANTIC_CACHE_KEY, cache_id,
+                json.dumps({"embedding": q_emb, "response": response}))
 
-# Usage in pipeline (before running LangGraph)
 semantic_cache = SemanticCache()
 
-def run_with_cache(query: str) -> str:
-    cached = semantic_cache.get(query)
+async def run_with_semantic_cache(state: dict, config: dict) -> str:
+    cached = semantic_cache.get(state["query"])
     if cached:
-        return cached   # Saved all LLM calls!
-    
-    result = run_pipeline(query=query)   # Full LangGraph pipeline
-    semantic_cache.set(query, result["final_response"])
-    return result["final_response"]</pre></div>
+        return cached
+    result = await agent_graph.ainvoke(state, config=config)   # real LangGraph entry point
+    final = result.get("final_response", "Request failed.")
+    if result.get("is_safe", False):
+        semantic_cache.set(state["query"], final)
+    return final</pre></div>
+    <div class="ib ib-tip" style="margin-top:.6rem"><span class="ib-ico">💡</span><span>Start with the exact-match cache above only — it's simpler, has zero embedding cost, and already covers the common case (repeat questions in the same session). Add the semantic layer on top only once you've measured exact-match hit rate and found it too low.</span></div>
   </div>
   <div class="nav-footer"><button class="nav-btn" onclick="go(17)">← Prev</button><button class="nav-btn pri" onclick="go(19)">Next: Token Optimization →</button></div>
 
@@ -2831,8 +2937,10 @@ def run_with_cache(query: str) -> str:
   <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:2.5rem;padding-top:1.2rem;border-top:2px solid var(--b1);flex-wrap:wrap">
     <button onclick="go(17)" style="background:var(--bg2);border:1px solid var(--b2);color:var(--t0);padding:.55rem 1.1rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       ← 17 · Multi-Agent Patterns
+    </button>
     <button onclick="go(19)" style="background:linear-gradient(135deg,#6366f1,#0891b2);color:#fff;border:none;padding:.55rem 1.2rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       19 · Token Optimization →
+    </button>
   </div>
 </div>
 
@@ -2854,19 +2962,30 @@ def run_with_cache(query: str) -> str:
   <h2 class="sec-title">💰 Spend Less Tokens — 8 Strategies</h2>
   <p class="sec-body">Token cost = your biggest LLM expense in production. These 8 strategies can cut costs by 60–90% without sacrificing quality.</p>
 
+  <div class="card" style="border-left:4px solid #f59e0b;background:rgba(245,158,11,.04)">
+    <div style="font-weight:800;color:var(--t0);margin-bottom:.6rem;font-size:.9rem">🚀 Do This Now (3-minute checklist)</div>
+    <table class="tbl" style="font-size:.78rem">
+      <tr><td style="white-space:nowrap"><strong>1. Files to edit</strong></td><td><code>agents/planner.py</code> and <code>agents/critic_generator.py</code> — no new files, just edit the <code>ChatGroq(...)</code> line inside each</td></tr>
+      <tr><td style="white-space:nowrap"><strong>2. What to change</strong></td><td>In <code>planner.py</code>'s <code>plan()</code>: add <code>max_tokens=150</code> to the <code>ChatGroq(...)</code> call (it only ever returns a short JSON reply, no reason to allow more). In <code>critic_generator.py</code>'s <code>generate_response()</code>: add <code>max_tokens=settings.max_tokens</code> (this setting already exists in <code>config.py</code> but nothing uses it today).</td></tr>
+      <tr><td style="white-space:nowrap"><strong>3. Optional bigger win</strong></td><td>In <code>planner.py</code>, swap the model to a smaller/faster one just for planning: <code>ChatGroq(model="llama-3.1-8b-instant", ...)</code> — keep <code>settings.model_name</code> (the 70B model) only for the final answer in <code>critic_generator.py</code></td></tr>
+      <tr><td style="white-space:nowrap"><strong>4. No new call site</strong></td><td>These are edits inside functions that are already being called by <code>graph.py</code> — you don't need to call anything new</td></tr>
+      <tr><td style="white-space:nowrap"><strong>5. Proof it works</strong></td><td>Open your LangSmith trace for a request (Step 07) and check the <code>planner</code> node's output tokens dropped, with no drop in answer quality</td></tr>
+    </table>
+  </div>
+
   <div class="tok-grid">
     <div class="tok-card">
-      <span class="tok-saving">Save 60–90%</span>
-      <div class="tok-ico">🧠</div>
-      <div class="tok-ti">1. Groq Prompt Caching</div>
-      <div class="tok-body">Add <code style="color:var(--cyan)">cache_control: ephemeral</code> to system prompts. Cache hit = 0.1× cost. Essential for any repeated system prompt. Already covered in Step 18.</div>
-      <div class="tok-meter"><div class="tok-fill" style="width:90%"></div></div>
+      <span class="tok-saving">Save on repeats</span>
+      <div class="tok-ico">⚡</div>
+      <div class="tok-ti">1. Redis Response Cache</div>
+      <div class="tok-body">Groq has no user-facing <code style="color:var(--cyan)">cache_control</code> like Anthropic — its speed comes from LPU hardware, not an app-controlled KV cache. The real win for repeats is the app-level Redis cache from Step 18.</div>
+      <div class="tok-meter"><div class="tok-fill" style="width:60%"></div></div>
     </div>
     <div class="tok-card">
       <span class="tok-saving">Save 60–80%</span>
       <div class="tok-ico">🎯</div>
-      <div class="tok-ti">2. Right Model for Right Task</div>
-      <div class="tok-body">Not every task needs Sonnet. Use Haiku (10× cheaper) for classification, validation, and routing. Only use Sonnet for final generation.</div>
+      <div class="tok-ti">2. Right Model Size for Right Task</div>
+      <div class="tok-body">Groq hosts multiple model sizes. Use a small/fast model (e.g. <code>llama-3.1-8b-instant</code>) for planner/critic/validator; reserve <code>llama-3.3-70b-versatile</code> (this project's <code>settings.model_name</code>) for final generation only.</div>
       <div class="tok-meter"><div class="tok-fill" style="width:75%"></div></div>
     </div>
     <div class="tok-card">
@@ -2927,86 +3046,76 @@ def run_with_cache(query: str) -> str:
     </table>
   </div>
 
+  <div class="ib ib-note"><span class="ib-ico">⚠️</span><span><strong>Correction:</strong> the code below previously called <code>anthropic.Groq()</code> and Claude model names — that's Anthropic's Messages API, not Groq's. This project talks to Groq via <code>langchain_groq.ChatGroq</code>. Rewritten below to match <code>agents/planner.py</code>, <code>agents/critic_generator.py</code> and <code>config.py</code> as they actually exist in this project.</span></div>
   <div class="code-wrap"><button class="cp" onclick="cpEl(this)">Copy</button>
-<pre"># Token optimization implementation in our pipeline
+<pre># Token optimization, applied to this project's real files (Groq via langchain_groq)
 
-import anthropic
-client = anthropic.Groq()
+from langchain_groq import ChatGroq
+from langchain_core.messages import SystemMessage, HumanMessage
+from config import settings
+import json
 
-# ── Strategy 1: Prompt Caching ─────────────────────────────────────
-PLANNER_SYSTEM = "You are an expert query planning agent..." # ~300 tokens
+FAST_MODEL = "llama-3.1-8b-instant"        # Strategy 2: small model for cheap nodes
+QUALITY_MODEL = settings.model_name         # llama-3.3-70b-versatile — final generation only
 
-def query_planner_optimized(query: str) -> dict:
-    resp = client.messages.create(
-        model="claude-haiku-4-5-20251001",  # Strategy 2: Haiku for planning
-        max_tokens=150,                      # Strategy 5: tight budget
-        system=[{
-            "type": "text",
-            "text": PLANNER_SYSTEM,
-            "cache_control": {"type": "ephemeral"}  # Strategy 1: cache!
-        }],
-        messages=[{"role": "user", "content": query}]
-    )
-    # resp.usage.cache_read_input_tokens → how many cached tokens used
-    # resp.usage.cache_creation_input_tokens → first time cache write
-    return json.loads(resp.content[0].text)
+# ── Strategy 2 + 5, applied to agents/planner.py's plan() ──────────
+def plan(sanitized_query: str) -> tuple[str, list[str]]:
+    llm = ChatGroq(model=FAST_MODEL, temperature=0, api_key=settings.groq_api_key,
+                    max_tokens=150)          # Strategy 5: planner only needs a short JSON reply
+    try:
+        resp = llm.invoke([
+            SystemMessage(content=SYSTEM_PROMPT),
+            HumanMessage(content=sanitized_query)
+        ])
+        content = resp.content.replace("```json", "").replace("```", "").strip()
+        data = json.loads(content)
+        return data.get("intent", "general_qa"), data.get("sub_queries", [sanitized_query])
+    except Exception:
+        return "general_qa", [sanitized_query]
 
-# ── Strategy 7: Count tokens before expensive calls ────────────────
-def safe_generate(context: str, query: str, max_context_tokens=2000):
-    # Count before sending
-    token_count = client.messages.count_tokens(
-        model="claude-sonnet-4-6",
-        system=GENERATOR_SYSTEM,
-        messages=[{"role":"user","content":f"Context: {context}\n\nQuery: {query}"}]
-    )
-    if token_count.input_tokens > 6000:
-        # Truncate context to stay within budget
-        context = truncate_to_tokens(context, max_context_tokens)
+# ── Strategy 5 + 7, applied to agents/critic_generator.py's generate_response() ──
+def generate_response(query: str, retrieved_docs: list[dict]) -> str:
+    llm = ChatGroq(model=QUALITY_MODEL, temperature=0.7, api_key=settings.groq_api_key,
+                    max_tokens=settings.max_tokens)   # Strategy 5: explicit budget, not model default
+    context_text = "\n\n".join(d["content"] for d in retrieved_docs[:3])  # Strategy 4: top-3 only
+    resp = llm.invoke([
+        SystemMessage(content=GENERATOR_PROMPT.replace("{context}", context_text)),
+        HumanMessage(content=query)
+    ])
+    return resp.content
 
-    return client.messages.create(
-        model="claude-sonnet-4-6",
-        max_tokens=512,           # Strategy 5: only what we need
-        system=[{
-            "type": "text",
-            "text": GENERATOR_SYSTEM,
-            "cache_control": {"type": "ephemeral"}  # Strategy 1
-        }],
-        messages=[{"role":"user","content":f"Context: {context[:max_context_tokens*4]}\n\nQuery: {query}"}]
-    )
+# ── Strategy 7: count tokens before an expensive call (tiktoken is provider-agnostic) ──
+import tiktoken
+enc = tiktoken.get_encoding("cl100k_base")   # close enough for budget guarding, not billing-exact
 
-# ── Strategy 6: Batch API for eval runs ─────────────────────────────
-def batch_evaluate(examples: list[dict]) -> list[dict]:
-    """50% cheaper for non-realtime evaluation jobs."""
-    requests = [{
-        "custom_id": f"eval-{i}",
-        "params": {
-            "model": "claude-haiku-4-5-20251001",
-            "max_tokens": 200,
-            "messages": [{"role":"user","content": ex["query"]}]
-        }
-    } for i, ex in enumerate(examples)]
+def truncate_context(context: str, max_tokens: int = 2000) -> str:
+    tokens = enc.encode(context)
+    if len(tokens) &lt;= max_tokens:
+        return context
+    return enc.decode(tokens[:max_tokens])
 
-    batch = client.messages.batches.create(requests=requests)
-    # Poll until complete, then retrieve results at 50% cost
-    return batch
+# ── Strategy 8: skip the LLM for deterministic checks (already in security/prompt_guard.py) ──
+def smart_security_check(query: str) -> tuple[bool, bool]:
+    # Regex scan first (free, ~1ms) — see INJECTION_PATTERNS in prompt_guard.py
+    is_safe, threat_type, events = check_safety(query)
+    if not is_safe:
+        return is_safe, False   # blocked by regex — never reaches the LLM
 
-# ── Strategy 8: Skip LLM for deterministic tasks ───────────────────
-def smart_security_check(query: str) -> tuple[float, bool]:
-    # Regex first (free, 0.8ms)
-    risk, events = _regex_scan(query)
-    if risk >= 0.85: return risk, False   # definite block, no LLM
-    if risk <= 0.30: return risk, True    # definitely safe, no LLM
-
-    # Only reach LLM for ambiguous 0.30 < risk < 0.85 (saves 90% of calls)
-    return _llm_semantic_check(query)</pre></div>
+    max_severity = max((e.severity for e in events), default=0.0)
+    if 0.30 &lt; max_severity &lt; 0.85:
+        # Only this narrow band is worth an LLM opinion — everything else is decided for free
+        return _llm_semantic_check(query), True
+    return is_safe, True</pre></div>
   <div class="nav-footer"><button class="nav-btn" onclick="go(18)">← Prev</button><button class="nav-btn pri" onclick="go(20)">Next: Interview Q&amp;A →</button></div>
 
   <!-- 🔘 PREV/NEXT ACTION BUTTONS FOR STEP 19 -->
   <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:2.5rem;padding-top:1.2rem;border-top:2px solid var(--b1);flex-wrap:wrap">
     <button onclick="go(18)" style="background:var(--bg2);border:1px solid var(--b2);color:var(--t0);padding:.55rem 1.1rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       ← 18 · Caching Strategy
+    </button>
     <button onclick="go(20)" style="background:linear-gradient(135deg,#6366f1,#0891b2);color:#fff;border:none;padding:.55rem 1.2rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       20 · Interview Q&A →
+    </button>
   </div>
 </div>
 <!-- ════ S20: INTERVIEW Q&A ════ -->
@@ -3212,7 +3321,7 @@ with client.messages.stream(...) as stream:
 
     <div class="qa-item" data-cat="tok"><div class="qa-hdr" onclick="toggleQA(this)"><span class="qa-freq">⭐⭐⭐</span><div class="qa-q">When would you use Haiku vs Sonnet vs Opus?</div><div class="qa-meta"><span class="diff diff-e">Easy</span><span class="qa-arr">▾</span></div></div><div class="qa-body"><div class="qa-answer"><strong>Claude Haiku</strong> (fastest, cheapest, 100K context): classification (binary decisions), routing, validation, simple extraction, format checking, HyDE generation. Anywhere you need a quick answer, not a creative or nuanced one.<br><br><strong>Claude Sonnet</strong> (balanced, good value, 200K context): production generation, query planning, complex analysis, code generation, structured data extraction, user-facing responses. The workhorse for most production tasks.<br><br><strong>Claude Opus</strong> (most capable, expensive, 200K context): complex reasoning, difficult coding problems, nuanced analysis where quality trumps cost. Use sparingly — reserve for tasks where Sonnet fails consistently.<br><br>Our system: Haiku for 8/11 nodes (security LLM, HyDE, critic, rewriter, validator, hitl routing). Sonnet for 2/11 (planner, generator). This mix saves ~70% vs all-Sonnet.<div class="qa-keywords"><span class="tag ti">Haiku</span><span class="tag tg">Sonnet</span><span class="tag ta">Opus</span><span class="tag tp">model selection</span></div></div></div></div>
 
-    <div class="qa-item" data-cat="tok"><div class="qa-hdr" onclick="toggleQA(this)"><span class="qa-freq">⭐⭐</span><div class="qa-q">How do you count tokens before sending a request?</div><div class="qa-meta"><span class="diff diff-m">Medium</span><span class="qa-arr">▾</span></div></div><div class="qa-body"><div class="qa-answer">Two methods:<br><br>1. <strong>Groq's count_tokens API</strong>: exact count, uses actual tokenizer. Costs an API call but gives accurate numbers. Use before expensive Sonnet calls or when context might exceed limits.<br><pre><button class="cp" onclick="cpEl(this)">Copy</button">count = client.messages.count_tokens(
+    <div class="qa-item" data-cat="tok"><div class="qa-hdr" onclick="toggleQA(this)"><span class="qa-freq">⭐⭐</span><div class="qa-q">How do you count tokens before sending a request?</div><div class="qa-meta"><span class="diff diff-m">Medium</span><span class="qa-arr">▾</span></div></div><div class="qa-body"><div class="qa-answer">Two methods:<br><br>1. <strong>Groq's count_tokens API</strong>: exact count, uses actual tokenizer. Costs an API call but gives accurate numbers. Use before expensive Sonnet calls or when context might exceed limits.<br><pre><button class="cp" onclick="cpEl(this)">Copy</button>count = client.messages.count_tokens(
     model="claude-sonnet-4-6",
     system="...",
     messages=[{"role":"user","content":f"{context}\n\n{query}"}]
@@ -3282,7 +3391,7 @@ print(count.input_tokens)  # exact count before sending</pre>2. <strong>tiktoken
 
     <div class="qa-item" data-cat="pgv"><div class="qa-hdr" onclick="toggleQA(this)"><span class="qa-freq">⭐⭐⭐</span><div class="qa-q">HNSW vs IVFFlat index — which to choose and why?</div><div class="qa-meta"><span class="diff diff-h">Hard</span><span class="qa-arr">▾</span></div></div><div class="qa-body"><div class="qa-answer"><strong>HNSW (Hierarchical Navigable Small World)</strong>: graph-based index. Nodes are vectors, edges connect nearby vectors across multiple layers. Search navigates from top (sparse) layer down to bottom (dense) layer. <br><br>• ✅ No training data needed — can build while inserting<br>• ✅ Higher recall (≥98%) at same query speed<br>• ✅ Incremental updates work well<br>• ❌ More memory (stores graph edges)<br><br><strong>IVFFlat (Inverted File with Flat quantization)</strong>: clusters vectors into <code>lists</code> groups using k-means. Query finds nearest <code>probes</code> clusters, then does exact search within them.<br><br>• ✅ Less memory<br>• ❌ Needs existing data for k-means training (can't build incrementally)<br>• ❌ Lower recall if <code>probes</code> is too small<br><br><strong>Recommendation:</strong> Use HNSW for most production use. IVFFlat if you have &gt;1M pre-loaded vectors and memory is constrained. We use HNSW with <code>m=16, ef_construction=64</code> — the standard production config.<div class="qa-keywords"><span class="tag ti">HNSW</span><span class="tag tg">IVFFlat</span><span class="tag ta">recall</span><span class="tag tp">memory</span></div></div></div></div>
 
-    <div class="qa-item" data-cat="pgv"><div class="qa-hdr" onclick="toggleQA(this)"><span class="qa-freq">⭐⭐⭐</span><div class="qa-q">How do you implement hybrid search (vector + keyword) with pgvector?</div><div class="qa-meta"><span class="diff diff-h">Hard</span><span class="qa-arr">▾</span></div></div><div class="qa-body"><div class="qa-answer">pgvector's biggest advantage: hybrid search happens in a single SQL query, no extra libraries needed.<br><br>Key ingredients:<br>1. <strong>pgvector</strong> for the <code>embedding &lt;=&gt; $1</code> vector distance<br>2. <strong>PostgreSQL FTS</strong> (<code>tsvector</code> + <code>to_tsvector</code> + <code>ts_rank</code>) for BM25-like keyword ranking<br>3. <strong>Weighted combination</strong>: <code>(0.7 × vector_score) + (0.3 × text_score)</code><br><br><pre><button class="cp" onclick="cpEl(this)">Copy</button">SELECT content, metadata,
+    <div class="qa-item" data-cat="pgv"><div class="qa-hdr" onclick="toggleQA(this)"><span class="qa-freq">⭐⭐⭐</span><div class="qa-q">How do you implement hybrid search (vector + keyword) with pgvector?</div><div class="qa-meta"><span class="diff diff-h">Hard</span><span class="qa-arr">▾</span></div></div><div class="qa-body"><div class="qa-answer">pgvector's biggest advantage: hybrid search happens in a single SQL query, no extra libraries needed.<br><br>Key ingredients:<br>1. <strong>pgvector</strong> for the <code>embedding &lt;=&gt; $1</code> vector distance<br>2. <strong>PostgreSQL FTS</strong> (<code>tsvector</code> + <code>to_tsvector</code> + <code>ts_rank</code>) for BM25-like keyword ranking<br>3. <strong>Weighted combination</strong>: <code>(0.7 × vector_score) + (0.3 × text_score)</code><br><br><pre><button class="cp" onclick="cpEl(this)">Copy</button>SELECT content, metadata,
        1 - (embedding <=> $1::vector) AS vector_score,
        ts_rank(content_tsv, plainto_tsquery('english', $2)) AS text_score
 FROM rag_documents
@@ -3304,8 +3413,10 @@ LIMIT 10;</pre>Compare to Qdrant: would need a separate BM25 retrieval library (
   <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:2.5rem;padding-top:1.2rem;border-top:2px solid var(--b1);flex-wrap:wrap">
     <button onclick="go(19)" style="background:var(--bg2);border:1px solid var(--b2);color:var(--t0);padding:.55rem 1.1rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       ← 19 · Token Optimization
+    </button>
     <button onclick="go(21)" style="background:linear-gradient(135deg,#6366f1,#0891b2);color:#fff;border:none;padding:.55rem 1.2rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       21 · pgvector Integration →
+    </button>
   </div>
 </div>
 
@@ -3326,6 +3437,19 @@ LIMIT 10;</pre>Compare to Qdrant: would need a separate BM25 retrieval library (
   <div class="step-badge" style="background:rgba(99,102,241,.12);color:var(--ind2);border:1px solid rgba(99,102,241,.2)">Step 21 · pgvector Integration <span class="sb-new" style="font-size:.55rem">NEW</span></div>
   <h2 class="sec-title">🐘 pgvector — Postgres as Your Vector DB</h2>
   <p class="sec-body">pgvector adds vector similarity search directly into PostgreSQL. If you're already running Postgres for relational data, pgvector lets you do vector search in the same database — no extra service, full SQL power, ACID transactions.</p>
+
+  <div class="card" style="border-left:4px solid #6366f1;background:rgba(99,102,241,.04)">
+    <div style="font-weight:800;color:var(--t0);margin-bottom:.6rem;font-size:.9rem">🚀 Do This Now (start here, in order)</div>
+    <table class="tbl" style="font-size:.78rem">
+      <tr><td style="white-space:nowrap"><strong>1. Start the database</strong></td><td><code>docker-compose up -d postgres</code> — this alone creates the container and runs <code>init.sql</code> automatically the first time (Step 1 &amp; 2 below explain why)</td></tr>
+      <tr><td style="white-space:nowrap"><strong>2. Two pip installs</strong></td><td><code>pip install asyncpg "psycopg[binary]" pgvector</code> (full list in Step 7 below)</td></tr>
+      <tr><td style="white-space:nowrap"><strong>3. File to edit</strong></td><td><code>config.py</code> — add the two settings shown in Step 7 (<code>pgvector_url</code>, <code>pgvector_async_url</code>). They already have working defaults, so you don't have to touch <code>.env</code> to try this locally.</td></tr>
+      <tr><td style="white-space:nowrap"><strong>4. File to replace</strong></td><td><code>agents/retriever.py</code> — swap its contents for the "Step 3 — LangChain PGVector integration" code block below (it fully replaces the Chroma version from Step 05)</td></tr>
+      <tr><td style="white-space:nowrap"><strong>5. Call it from</strong></td><td>Nothing changes in <code>graph.py</code> — it already calls <code>agents.retriever</code>'s functions by name, so replacing the file's contents is the whole job</td></tr>
+      <tr><td style="white-space:nowrap"><strong>6. Put some data in first</strong></td><td>Call <code>await index_documents([{"content": "..."}])</code> once (e.g. in a throwaway script) before you ask any questions — an empty <code>rag_documents</code> table has nothing to retrieve</td></tr>
+      <tr><td style="white-space:nowrap"><strong>7. Proof it works</strong></td><td>Run <code>docker exec -it &lt;postgres_container&gt; psql -U rag_user -d rag_db -c "SELECT count(*) FROM rag_documents;"</code> — the count should match how many documents you indexed</td></tr>
+    </table>
+  </div>
 
   <div class="g2" style="margin-bottom:1.25rem">
     <div style="background:rgba(99,102,241,.05);border:1px solid rgba(99,102,241,.2);border-radius:11px;padding:1rem">
@@ -3449,7 +3573,7 @@ embedder = HuggingFaceEmbeddings(
     encode_kwargs={"normalize_embeddings": True}   # cosine similarity needs normalized vectors
 )
 
-# ── PGVector vectorstore ──────────────────────────────────────────
+# ── PGVector LangChain wrapper — OPTIONAL simple path, see warning below ──
 vectorstore = PGVector(
     embeddings=embedder,
     collection_name="rag_documents",
@@ -3457,43 +3581,50 @@ vectorstore = PGVector(
     use_jsonb=True,                                # store metadata as JSONB
 )
 
-# ── Index documents (run once at startup or during ingestion) ─────
-def index_documents(documents: list[dict]):
-    """Add documents to pgvector store."""
-    from langchain_core.documents import Document
-    docs = [Document(page_content=d["content"], metadata=d.get("metadata", {}))
-            for d in documents]
-    vectorstore.add_documents(docs)
-    print(f"✅ Indexed {len(docs)} documents into pgvector")
+def dense_search(hypothesis: str, top_k: int = 10, filter_meta: dict = None):
+    """Simple path: LangChain's PGVector class, using ITS OWN auto-created tables
+    (langchain_pg_collection / langchain_pg_embedding) — NOT the rag_documents table
+    from init.sql. Fine on its own, but do not mix with index_documents()/hybrid_search_sql()
+    below — they write/read a different table and will silently see no data from each other."""
+    return vectorstore.similarity_search_with_relevance_scores(
+        query=hypothesis, k=top_k, filter=filter_meta,
+    )
+
+# ── Index documents into THIS project's actual schema (init.sql's rag_documents table) ──
+from pgvector.asyncpg import register_vector
+
+async def index_documents(documents: list[dict], collection: str = "rag_documents"):
+    """Embeds and inserts into rag_documents — the exact table hybrid_search_sql() reads
+    from below, so ingestion and retrieval stay on the same data."""
+    conn = await asyncpg.connect(settings.pgvector_async_url)
+    await register_vector(conn)   # lets asyncpg send/receive the pgvector `vector` type directly
+    for d in documents:
+        embedding = embedder.embed_query(d["content"])
+        await conn.execute(
+            "INSERT INTO rag_documents (collection, content, metadata, embedding) VALUES ($1, $2, $3, $4)",
+            collection, d["content"], json.dumps(d.get("metadata", {})), embedding
+        )
+    await conn.close()
+    print(f"✅ Indexed {len(documents)} documents into rag_documents")
 
 # ── Stage 1: HyDE hypothesis ──────────────────────────────────────
 def generate_hyde_hypothesis(query: str) -> str:
     from langchain_groq import ChatGroq
-    llm = ChatGroq(model="claude-haiku-4-5-20251001", max_tokens=200, temperature=0)
+    # Groq hosts Llama/Mixtral/Gemma models, not Claude — "claude-*" here 404s against Groq's API
+    llm = ChatGroq(model="llama-3.1-8b-instant", max_tokens=200, temperature=0,
+                    api_key=settings.groq_api_key)
     prompt = f"Write a short factual paragraph that directly answers: '{query}'"
     return llm.invoke(prompt).content
 
-# ── Stage 2: Dense vector search via pgvector ─────────────────────
-def dense_search(hypothesis: str, top_k: int = 10, filter_meta: dict = None):
-    """
-    pgvector cosine similarity search.
-    filter_meta enables hybrid: vector similarity + metadata SQL filter.
-    Example: filter_meta={"category": "finance"} → only finance docs
-    """
-    return vectorstore.similarity_search_with_relevance_scores(
-        query=hypothesis,
-        k=top_k,
-        filter=filter_meta,    # translates to: WHERE metadata @> '{"category":"finance"}'
-    )
-
-# ── Stage 2b: Hybrid BM25 + full-text (native PostgreSQL FTS) ─────
+# ── Stage 2: Hybrid BM25 + full-text (native PostgreSQL FTS) ─────
 async def hybrid_search_sql(query: str, top_k: int = 10) -> list[dict]:
     """
     True hybrid search using a single PostgreSQL query.
     Combines: cosine similarity (pgvector) + BM25-style ranking (pg_trgm / ts_rank)
     No separate BM25 library needed — PostgreSQL handles it natively!
     """
-    conn = await asyncpg.connect(settings.pgvector_url.replace("+psycopg", ""))
+    conn = await asyncpg.connect(settings.pgvector_async_url)
+    await register_vector(conn)
     query_embedding = embedder.embed_query(query)
 
     sql = """
@@ -3547,6 +3678,7 @@ async def retriever_agent(state: AgentState) -> AgentState:
             "retrieval_score":    avg_score,
             "retrieval_attempts": attempts,
             "hyde_hypothesis":    hypothesis}</pre></div>
+    <div class="ib ib-note" style="margin-top:.6rem"><span class="ib-ico">⚠️</span><span>This node's return dict uses <code>retrieval_score</code>, <code>retrieval_attempts</code>, <code>hyde_hypothesis</code> and <code>rewritten_query</code> — none of these are declared on <code>AgentState</code> in the real <code>state.py</code> (it already has <code>reranked_docs</code> and <code>iteration_count</code> for this exact purpose — see Step 22's critic+rewriter+gen loop). Either add these keys to <code>AgentState</code>, or rename them to match what's already declared so this node and the Step 22 critic loop share one schema instead of two.</span></div>
   </div>
 
   <!-- IVFFlat vs HNSW -->
@@ -3564,7 +3696,7 @@ async def retriever_agent(state: AgentState) -> AgentState:
     </table>
     </div>
     <div class="code-wrap" style="margin-top:.75rem"><button class="cp" onclick="cpEl(this)">Copy</button>
-<pre">-- HNSW (recommended for most production cases)
+<pre>-- HNSW (recommended for most production cases)
 CREATE INDEX rag_hnsw_idx ON rag_documents
     USING hnsw (embedding vector_cosine_ops)
     WITH (m = 16, ef_construction = 64);
@@ -3589,7 +3721,7 @@ SET ivfflat.probes = 10;   -- check 10 lists (higher = better recall)</pre></div
   <div class="card">
     <div class="card-hd"><div class="c-ico" style="background:rgba(139,92,246,.12)">⚡</div><div><div class="c-ti">Step 5 — Hybrid Query Patterns (SQL + Vector)</div><div class="c-sub">pgvector's biggest advantage over Qdrant — full SQL expressiveness</div></div></div>
     <div class="code-wrap"><button class="cp" onclick="cpEl(this)">Copy</button>
-<pre">-- Pattern 1: Vector similarity + metadata filter (most common)
+<pre>-- Pattern 1: Vector similarity + metadata filter (most common)
 SELECT content, metadata,
        1 - (embedding <=> $1) AS similarity
 FROM rag_documents
@@ -3640,7 +3772,7 @@ WHERE id = $2;</pre></div>
   <div class="card">
     <div class="card-hd"><div class="c-ico" style="background:rgba(249,115,22,.12)">🔄</div><div><div class="c-ti">Step 6 — Migrate Existing Data from Qdrant to pgvector</div></div></div>
     <div class="code-wrap"><button class="cp" onclick="cpEl(this)">Copy</button>
-<pre">"""migrate_qdrant_to_pgvector.py — one-time migration script"""
+<pre>"""migrate_qdrant_to_pgvector.py — one-time migration script"""
 from qdrant_client import QdrantClient
 from langchain_community.vectorstores import PGVector
 from langchain_huggingface import HuggingFaceEmbeddings
@@ -3709,18 +3841,117 @@ PGVECTOR_URL=postgresql+psycopg://rag_user:your_secure_password_here@postgres:54
 PGVECTOR_ASYNC_URL=postgresql://rag_user:your_secure_password_here@postgres:5432/rag_db</pre></div>
 
     <div class="code-wrap" style="margin-top:.75rem"><button class="cp" onclick="cpEl(this)">Copy</button>
-<pre"># config.py — add pgvector settings
-from pydantic_settings import BaseSettings, SettingsConfigDict
-
+<pre># config.py — add to the existing Settings class (no new imports needed)
 class Settings(BaseSettings):
-    # ... existing fields ...
-    pgvector_url: str = Field(..., description="postgresql+psycopg://...")
-    pgvector_async_url: str = Field(..., description="postgresql://...")
+    # ... existing fields (groq_api_key, model_name, max_tokens, secret_key, etc.) ...
+
+    # Defaults match docker-compose.yml's postgres service so `docker-compose up` works
+    # out of the box; override via .env for anything else (e.g. a managed Postgres).
+    pgvector_url: str = "postgresql+psycopg://rag_user:postgrespassword@localhost:5432/rag_db"
+    pgvector_async_url: str = "postgresql://rag_user:postgrespassword@localhost:5432/rag_db"
     postgres_pool_min: int = 2
     postgres_pool_max: int = 10
-    vector_dimensions: int = 384      # BGE-small-en-v1.5 output dims
+    vector_dimensions: int = 384      # all-MiniLM-L6-v2 / BGE-small-en-v1.5 output dims
     vector_collection: str = "rag_documents"
     hnsw_ef_search: int = 100         # higher = better recall, slower</pre></div>
+    <div class="ib ib-note" style="margin-top:.6rem"><span class="ib-ico">⚠️</span><span>The previous version used <code>Field(..., description=...)</code> without importing <code>Field</code>, and made these fields <em>required with no default</em>. Since <code>.env.example</code> doesn't set <code>PGVECTOR_URL</code>, that would crash <code>Settings()</code> — and therefore the whole app — at import time, the moment <code>config.py</code> is loaded. Every other field in this project's real <code>config.py</code> has a default; these should too.</span></div>
+  </div>
+
+  <!-- Step 8: Postgres Chat History -->
+  <div class="card" style="margin-top:1.5rem;border-left:4px solid #ec4899">
+    <div class="card-hd"><div class="c-ico" style="background:rgba(236,72,153,.12)">💬</div><div><div class="c-ti">Step 8 — Postgres Chat History (store chat by user + thread)</div><div class="c-sub">A plain table in the same Postgres container — no vectors involved, just rows you can SELECT directly</div></div></div>
+    <div class="ib ib-note"><span class="ib-ico">ℹ️</span><span>This is different from LangGraph's <code>MemorySaver</code> (used in <code>graph.py</code>) — that keeps the graph's own internal run state, in memory, so it's lost on restart. This table is a simple, human-readable log of every message, permanently on disk in Postgres, that you can query directly. Both can exist at the same time; they solve different problems.</span></div>
+
+    <table class="tbl" style="margin-top:.75rem;font-size:.78rem">
+      <tr><td style="white-space:nowrap"><strong>1. New file</strong></td><td><code>db.py</code> — project root, next to <code>config.py</code></td></tr>
+      <tr><td style="white-space:nowrap"><strong>2. Call it from</strong></td><td><code>main.py</code>: <code>init_db()</code> once at startup, then <code>save_message()</code> twice inside <code>/api/chat</code> (once for the user's message, once for the reply)</td></tr>
+      <tr><td style="white-space:nowrap"><strong>3. Proof it works</strong></td><td>Send 2 chat messages with the same <code>thread_id</code>, then run the SQL check at the bottom of this card</td></tr>
+    </table>
+
+    <div class="code-wrap" style="margin-top:.75rem"><button class="cp" onclick="cpEl(this)">Copy</button>
+<pre># db.py — new file, project root
+import psycopg
+from config import settings
+
+def get_connection():
+    # psycopg (unlike SQLAlchemy) wants a plain postgresql:// URL, no "+psycopg" suffix
+    return psycopg.connect(settings.pgvector_async_url)
+
+def init_db() -> None:
+    """Call once at startup. Creates the table only if it doesn't exist yet - safe to call every time."""
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS chat_history (
+                    id SERIAL PRIMARY KEY,
+                    user_id TEXT NOT NULL,
+                    thread_id TEXT NOT NULL,
+                    role TEXT NOT NULL,              -- 'user' or 'assistant'
+                    content TEXT NOT NULL,
+                    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+                );
+            """)
+            cur.execute("""
+                CREATE INDEX IF NOT EXISTS chat_history_thread_idx
+                ON chat_history (user_id, thread_id, created_at);
+            """)
+        conn.commit()
+
+def save_message(user_id: str, thread_id: str, role: str, content: str) -> None:
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                "INSERT INTO chat_history (user_id, thread_id, role, content) VALUES (%s, %s, %s, %s)",
+                (user_id, thread_id, role, content)
+            )
+        conn.commit()
+
+def get_thread_history(user_id: str, thread_id: str) -> list[dict]:
+    """Every message for one user's one conversation, oldest first."""
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """SELECT role, content, created_at FROM chat_history
+                   WHERE user_id = %s AND thread_id = %s ORDER BY created_at""",
+                (user_id, thread_id)
+            )
+            rows = cur.fetchall()
+    return [{"role": r[0], "content": r[1], "created_at": r[2].isoformat()} for r in rows]
+</pre></div>
+
+    <div class="ib ib-tip" style="margin-top:.6rem"><span class="ib-ico">💡</span><span><strong>Call sites</strong> — both go in <code>main.py</code>:</span></div>
+    <div class="code-wrap" style="margin-top:.4rem"><button class="cp" onclick="cpEl(this)">Copy</button>
+<pre># main.py - add this import near the top
+from db import init_db, save_message, get_thread_history
+
+# main.py - inside the existing @app.on_event("startup") function, add:
+@app.on_event("startup")
+async def startup():
+    bootstrap_langsmith()
+    init_db()          # ← creates chat_history table on first run
+
+# main.py - inside the existing /api/chat function, right before the "return {...}" line:
+@app.post("/api/chat")
+async def chat(req: QueryRequest, api_key: str = Depends(verify_api_key)):
+    # ... existing code that builds `state`, `config`, and calls agent_graph.ainvoke() ...
+    final = result.get("final_response", "Request failed.")
+
+    save_message(req.user_id, req.thread_id, "user", req.message)
+    save_message(req.user_id, req.thread_id, "assistant", final)
+
+    return {"generation": final, "safe": result.get("is_safe", False),
+            "threat_type": result.get("threat_type")}
+
+# main.py - a new endpoint so the frontend can load past messages for a thread
+@app.get("/api/history/{thread_id}")
+def history(thread_id: str, user_id: str = "anonymous", api_key: str = Depends(verify_api_key)):
+    return {"messages": get_thread_history(user_id, thread_id)}
+</pre></div>
+
+    <div class="ib ib-tip" style="margin-top:.6rem"><span class="ib-ico">💡</span><span><strong>Check it worked</strong> — from a terminal, after sending a couple of chat messages:</span></div>
+    <div class="code-wrap" style="margin-top:.4rem"><button class="cp" onclick="cpEl(this)">Copy</button>
+<pre>docker exec -it $(docker ps -qf "name=postgres") psql -U rag_user -d rag_db \
+  -c "SELECT role, content, created_at FROM chat_history ORDER BY created_at DESC LIMIT 5;"</pre></div>
   </div>
 
   <div class="ib ib-grn"><span class="ib-ico">🎯</span><span><strong>Interview answer:</strong> "We use pgvector to consolidate our vector and relational data into one PostgreSQL instance. The key advantage is hybrid search — we can do <code>WHERE metadata->>'category' = 'finance' ORDER BY embedding &lt;=&gt; $1</code> in a single SQL query. This replaces what would require two separate service calls with Qdrant. HNSW index gives us &gt;98% recall at millisecond latency for our dataset size (&lt;1M vectors)."</span></div>
@@ -3731,8 +3962,10 @@ class Settings(BaseSettings):
   <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:2.5rem;padding-top:1.2rem;border-top:2px solid var(--b1);flex-wrap:wrap">
     <button onclick="go(20)" style="background:var(--bg2);border:1px solid var(--b2);color:var(--t0);padding:.55rem 1.1rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       ← 20 · Interview Q&A
+    </button>
     <button onclick="go(0)" style="background:linear-gradient(135deg,#6366f1,#0891b2);color:#fff;border:none;padding:.55rem 1.2rem;border-radius:8px;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:.4rem">
       00 · Setup Guide →
+    </button>
   </div>
 </div>
 
@@ -3819,6 +4052,249 @@ app = build_graph().compile(checkpointer=memory)</pre></div>
         &bull; <strong>async / await:</strong> Allows the server to handle other users while waiting the ~2 seconds for the LLM to reply.
       </div>
     </div>
+  </div>
+
+  <h3 style="margin-top:2.5rem;font-size:1.1rem;color:var(--t0)">4. Closing the Advertised Gaps — L3 Hallucination+Harm, HyDE+BM25+RRF+Rerank, Critic+Rewriter+Gen Loop</h3>
+  <div class="ib ib-note" style="margin-top:1rem"><span class="ib-ico">ℹ️</span><span>Step 02's architecture diagram and the file tree both label these three files with advanced capabilities. Step 05's code only ships the simple version. This is the real, working code that actually matches the labels — <code>state.py</code> already has <code>reranked_docs</code> and <code>iteration_count</code> declared for exactly this loop, they were just never wired up.</span></div>
+  <div style="font-size:.68rem;color:var(--t1);margin-top:.6rem"><strong>New deps</strong> (rank-bm25 is already in requirements.txt):</div>
+  <div class="code-wrap" style="margin-top:.4rem"><button class="cp" onclick="cpEl(this)">Copy</button><pre>pip install flashrank==0.2.8</pre></div>
+
+  <div class="card" style="margin-top:1.5rem;border-left:4px solid #f59e0b">
+    <div class="card-hd"><div class="c-ico" style="background:rgba(245,158,11,.12)">🛡️</div><div><div class="c-ti">security/output_validator.py — L3: hallucination + harm</div><div class="c-sub">Regex leak/harm scan first (free) → LLM groundedness judge only if regex passes (cost-gated)</div></div></div>
+    <div class="code-wrap"><button class="cp" onclick="cpEl(this)">Copy</button>
+<pre>import re, json
+from typing import Tuple
+from langchain_groq import ChatGroq
+from langchain_core.messages import SystemMessage, HumanMessage
+from config import settings
+
+HARM_PATTERNS = [
+    r"\b(kill myself|suicide|self harm|end my life)\b",
+    r"\b(how to (make|build))\b.{0,30}\b(bomb|explosive|weapon)\b",
+    r"\b(synthesize|manufacture)\b.{0,30}\b(bioweapon|nerve agent)\b",
+]
+
+GROUNDEDNESS_JUDGE = """You are a strict fact-checker. Compare the RESPONSE to the CONTEXT.
+Score how well every claim in the RESPONSE is supported by the CONTEXT.
+Return ONLY JSON: {{"groundedness": 0.0-1.0, "reason": "one sentence"}}
+
+CONTEXT:
+{context}
+
+RESPONSE:
+{response}"""
+
+def _regex_checks(response: str) -> Tuple[bool, str]:
+    if "You are a security classifier" in response or "You are an AI assistant" in response:
+        return False, "System prompt leakage detected in output."
+    if re.search(r"(\bpassword\b|\bsecret_key\b).{0,20}[:=]", response, re.IGNORECASE):
+        return False, "Potential credentials leakage detected."
+    for pattern in HARM_PATTERNS:
+        if re.search(pattern, response, re.IGNORECASE):
+            return False, "Harmful content detected (self-harm/weapons)."
+    return True, "ok"
+
+def _groundedness_check(response: str, retrieved_docs: list[dict]) -> Tuple[bool, str]:
+    if not retrieved_docs:
+        return True, "No context to ground against - skipping."
+    context = "\n\n".join(d["content"] for d in retrieved_docs)
+    llm = ChatGroq(model=settings.model_name, temperature=0, api_key=settings.groq_api_key, max_tokens=150)
+    try:
+        resp = llm.invoke([
+            SystemMessage(content=GROUNDEDNESS_JUDGE.format(context=context, response=response)),
+            HumanMessage(content="Score it.")
+        ])
+        data = json.loads(resp.content.replace("```json", "").replace("```", "").strip())
+        score = float(data.get("groundedness", 1.0))
+        if score &lt; 0.6:
+            return False, f"Hallucination risk high (groundedness={score:.2f}): {data.get('reason','')}"
+        return True, f"Grounded (score={score:.2f})"
+    except Exception:
+        # Judge failing should never block a real response - fail open on this check only
+        return True, "Groundedness judge unavailable - skipped."
+
+def validate_output(response: str, retrieved_docs: list[dict] | None = None) -> Tuple[bool, str]:
+    """Layer 3 output security: regex leak/harm scan, then LLM groundedness judge."""
+    is_safe, reason = _regex_checks(response)
+    if not is_safe:
+        return False, reason
+    return _groundedness_check(response, retrieved_docs or [])
+</pre></div>
+    <div class="ib ib-tip" style="margin-top:.6rem"><span class="ib-ico">💡</span><span><strong>Call site change</strong> in <code>graph.py</code>'s <code>validator_node</code> — pass the docs through: <code>validate_output(state.get("draft_response", ""), state.get("retrieved_docs", []))</code></span></div>
+  </div>
+
+  <div class="card" style="margin-top:1.5rem;border-left:4px solid #6366f1">
+    <div class="card-hd"><div class="c-ico" style="background:rgba(99,102,241,.12)">🔍</div><div><div class="c-ti">agents/retriever.py — HyDE + BM25 + RRF + Rerank</div><div class="c-sub">HyDE-boosted dense search + BM25 sparse search → Reciprocal Rank Fusion → cross-encoder rerank to top_k</div></div></div>
+    <div class="code-wrap"><button class="cp" onclick="cpEl(this)">Copy</button>
+<pre>from langchain_community.vectorstores import Chroma
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_groq import ChatGroq
+from langchain_core.messages import HumanMessage
+from rank_bm25 import BM25Okapi
+from flashrank import Ranker, RerankRequest
+from config import settings
+
+embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+vector_store = Chroma(
+    collection_name="rag_docs",
+    embedding_function=embeddings,
+    persist_directory="./chroma_data"
+)
+
+if vector_store._collection.count() == 0:
+    vector_store.add_texts(texts=[
+        "RAG (Retrieval-Augmented Generation) connects LLMs to external data.",
+        "Security in LLMs involves input guardrails and output validation.",
+        "LangGraph is an orchestration framework for AI agents."
+    ])
+
+# BM25 needs the raw corpus in memory - pulled once from Chroma at import time
+_raw = vector_store.get(include=["documents"])
+_corpus_texts = _raw["documents"]
+_bm25 = BM25Okapi([t.split() for t in _corpus_texts]) if _corpus_texts else None
+_reranker = Ranker(model_name="ms-marco-TinyBERT-L-2-v2")  # small, CPU-friendly cross-encoder
+
+HYDE_PROMPT = "Write a short, confident hypothetical answer to this question (2-3 sentences). Don't say you don't know."
+
+def _hyde_query(query: str) -> str:
+    """HyDE: embed a hypothetical ANSWER instead of the raw question - closes the vocabulary
+    gap between how questions are phrased and how answers are written."""
+    llm = ChatGroq(model=settings.model_name, temperature=0.3, api_key=settings.groq_api_key, max_tokens=100)
+    try:
+        resp = llm.invoke([HumanMessage(content=f"{HYDE_PROMPT}\n\nQuestion: {query}")])
+        return resp.content
+    except Exception:
+        return query  # fall back to the raw query if the LLM call fails
+
+def _dense_search(query: str, k: int) -> list[tuple[str, float]]:
+    hyde_doc = _hyde_query(query)
+    results = vector_store.similarity_search_with_relevance_scores(hyde_doc, k=k)
+    return [(doc.page_content, score) for doc, score in results]
+
+def _sparse_search(query: str, k: int) -> list[tuple[str, float]]:
+    if not _bm25:
+        return []
+    scores = _bm25.get_scores(query.split())
+    ranked = sorted(zip(_corpus_texts, scores), key=lambda x: x[1], reverse=True)
+    return ranked[:k]
+
+def _reciprocal_rank_fusion(dense: list, sparse: list, k: int = 60) -> list[str]:
+    """RRF: score(doc) = sum(1 / (k + rank)) across every ranking it appears in.
+    Rank-based fusion - robust to dense/sparse scores living on different scales."""
+    fused = {}
+    for rank, (text, _) in enumerate(dense):
+        fused[text] = fused.get(text, 0) + 1 / (k + rank + 1)
+    for rank, (text, _) in enumerate(sparse):
+        fused[text] = fused.get(text, 0) + 1 / (k + rank + 1)
+    return sorted(fused, key=fused.get, reverse=True)
+
+def retrieve_docs(sub_queries: list[str], top_k: int = 3) -> list[dict]:
+    """Hybrid retrieval: HyDE dense search + BM25 sparse search, fused with RRF,
+    then cross-encoder reranked down to the top_k docs the generator actually sees."""
+    candidates = set()
+    for query in sub_queries:
+        dense = _dense_search(query, k=10)
+        sparse = _sparse_search(query, k=10)
+        candidates.update(_reciprocal_rank_fusion(dense, sparse))
+
+    if not candidates:
+        return []
+
+    passages = [{"id": str(i), "text": text} for i, text in enumerate(candidates)]
+    reranked = _reranker.rerank(RerankRequest(query=sub_queries[0], passages=passages))
+
+    return [{"content": r["text"], "score": r["score"]} for r in reranked[:top_k]]
+</pre></div>
+  </div>
+
+  <div class="card" style="margin-top:1.5rem;border-left:4px solid #10b981">
+    <div class="card-hd"><div class="c-ico" style="background:rgba(16,185,129,.12)">🎯</div><div><div class="c-ti">agents/critic_generator.py — critic + rewriter + gen</div><div class="c-sub">Critic scores retrieval quality before spending tokens on generation; weak retrieval loops back through a rewriter (max 2×)</div></div></div>
+    <div class="code-wrap"><button class="cp" onclick="cpEl(this)">Copy</button>
+<pre>from langchain_groq import ChatGroq
+from langchain_core.messages import SystemMessage, HumanMessage
+from config import settings
+import json
+
+GENERATOR_PROMPT = """You are a helpful AI assistant. Answer the user's question
+using ONLY the provided context. If the answer is not in the context, say "I don't know based on the context."
+
+CONTEXT:
+{context}"""
+
+CRITIC_PROMPT = """Rate how well these retrieved documents can answer the question.
+Return ONLY JSON: {{"relevance": 0.0-1.0, "missing": "what info is missing, if any"}}
+
+QUESTION: {query}
+
+DOCUMENTS:
+{docs}"""
+
+REWRITER_PROMPT = """The first search for this question returned weak results.
+Missing info: {missing}
+Rewrite the question as 1-2 sharper, more specific search queries.
+Return ONLY JSON: {{"sub_queries": ["query1", "query2"]}}
+
+ORIGINAL QUESTION: {query}"""
+
+def critic_agent(query: str, retrieved_docs: list[dict]) -> dict:
+    """Scores retrieval quality before we spend tokens generating from it."""
+    if not retrieved_docs:
+        return {"relevance": 0.0, "missing": "no documents retrieved"}
+    llm = ChatGroq(model=settings.model_name, temperature=0, api_key=settings.groq_api_key, max_tokens=150)
+    docs_text = "\n\n".join(d["content"] for d in retrieved_docs)
+    try:
+        resp = llm.invoke([SystemMessage(content=CRITIC_PROMPT.format(query=query, docs=docs_text))])
+        data = json.loads(resp.content.replace("```json", "").replace("```", "").strip())
+        return {"relevance": float(data.get("relevance", 1.0)), "missing": data.get("missing", "")}
+    except Exception:
+        return {"relevance": 1.0, "missing": ""}  # fail open - never loop forever on a judge error
+
+def rewrite_query(query: str, missing: str) -> list[str]:
+    """Turns critic feedback into sharper sub-queries and sends retrieval around the loop again."""
+    llm = ChatGroq(model=settings.model_name, temperature=0.3, api_key=settings.groq_api_key, max_tokens=150)
+    try:
+        resp = llm.invoke([SystemMessage(content=REWRITER_PROMPT.format(query=query, missing=missing))])
+        data = json.loads(resp.content.replace("```json", "").replace("```", "").strip())
+        return data.get("sub_queries", [query])
+    except Exception:
+        return [query]
+
+def generate_response(query: str, retrieved_docs: list[dict]) -> str:
+    llm = ChatGroq(model=settings.model_name, temperature=0.7, api_key=settings.groq_api_key, max_tokens=settings.max_tokens)
+    context_text = "\n\n".join(d["content"] for d in retrieved_docs)
+    formatted_system = GENERATOR_PROMPT.replace("{context}", context_text)
+    resp = llm.invoke([
+        SystemMessage(content=formatted_system),
+        HumanMessage(content=query)
+    ])
+    return resp.content
+</pre></div>
+    <div class="ib ib-tip" style="margin-top:.6rem"><span class="ib-ico">💡</span><span><strong>Wiring the loop into <code>graph.py</code></strong> - add two nodes and one conditional edge. <code>state.py</code> already declares <code>iteration_count: Annotated[int, operator.add]</code>, so returning <code>{"iteration_count": 1}</code> auto-increments it (that's the reducer, not a bug). Add <code>critic_relevance: float</code> and <code>critic_missing: str</code> to <code>AgentState</code> in <code>state.py</code> for this.</span></div>
+    <div class="code-wrap" style="margin-top:.6rem"><button class="cp" onclick="cpEl(this)">Copy</button>
+<pre># graph.py additions
+def critic_node(state: AgentState) -> dict:
+    from agents.critic_generator import critic_agent
+    result = critic_agent(state.get("sanitized_query", ""), state.get("retrieved_docs", []))
+    return {"critic_relevance": result["relevance"], "critic_missing": result["missing"]}
+
+def route_critic(state: AgentState) -> str:
+    if state.get("critic_relevance", 1.0) &gt;= 0.6 or state.get("iteration_count", 0) &gt;= 2:
+        return "proceed"
+    return "rewrite"
+
+def rewriter_node(state: AgentState) -> dict:
+    from agents.critic_generator import rewrite_query
+    subs = rewrite_query(state.get("sanitized_query", ""), state.get("critic_missing", ""))
+    return {"sub_queries": subs, "iteration_count": 1}
+
+# in build_graph():
+g.add_node("critic", critic_node)
+g.add_node("rewriter", rewriter_node)
+
+g.add_edge("retriever", "critic")
+g.add_conditional_edges("critic", route_critic, {"proceed": "generator", "rewrite": "rewriter"})
+g.add_edge("rewriter", "retriever")   # loop back - capped by iteration_count &gt;= 2
+</pre></div>
   </div>
 
   <div class="nav-footer" style="margin-top:2rem"><button class="nav-btn" onclick="go(21)">← Prev</button><button class="nav-btn pri" onclick="go(0)">Back to Start →</button></div>
