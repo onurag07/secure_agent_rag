@@ -34,7 +34,7 @@ services:
     image: redis:7.4-alpine
     command: redis-server --requirepass ${REDIS_PASSWORD:-redispassword}
              --maxmemory 512mb --maxmemory-policy allkeys-lru
-    ports: ["6379:6379"]
+    ports: ["6380:6379"]
     healthcheck:
       test: ["CMD-SHELL", "redis-cli -a ${REDIS_PASSWORD:-redispassword} ping | grep PONG || exit 1"]
       interval: 10s
@@ -47,20 +47,33 @@ services:
     environment:
       POSTGRES_DB: rag_db
       POSTGRES_USER: rag_user
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgrespassword}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-rag_pass}
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # auto-run on first start
-    ports: ["5432:5432"]
+    ports: ["5433:5432"]
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U rag_user -d rag_db"]
       interval: 10s
       timeout: 5s
       retries: 5
 
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_SERVER_JSON_FILE: /pgadmin4/servers.json
+    ports:
+      - "5050:80"
+    volumes:
+      - ./servers.json:/pgadmin4/servers.json
+    depends_on:
+      postgres: { condition: service_healthy }
+
   mongo:
     image: mongo:7.0
-    ports: ["27017:27017"]
+    ports: ["27018:27017"]
     volumes: [mongo_data:/data/db]
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]

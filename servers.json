@@ -1,0 +1,14 @@
+{
+    "Servers": {
+        "1": {
+            "Name": "rag_db",
+            "Group": "Servers",
+            "Host": "postgres",
+            "Port": 5432,
+            "MaintenanceDB": "rag_db",
+            "Username": "rag_user",
+            "Password": "rag_pass",
+            "SSLMode": "prefer"
+        }
+    }
+}

@@ -88,7 +88,7 @@ def _llm_check(query: str):
     """Only called when regex is inconclusive — saves 90% of LLM calls."""
     llm = ChatGroq(model=settings.primary_model, max_tokens=256,
                         temperature=0.0,
-                        api_key=settings.groq_api_key.get_secret_value())
+                        api_key=settings.groq_api_key)
     try:
         resp = llm.invoke([SystemMessage(content=GUARD_SYSTEM),
                            HumanMessage(content=f"Classify:\n\n{query[:2000]}")])
@@ -113,7 +113,7 @@ def security_check(state: AgentState) -> AgentState:
                                           catches novel/obfuscated attacks
     """
     t0 = time.time()
-    query = state.get("raw_query", "")
+    query = state.get("query", "")  # "query" matches AgentState and main.py
     events = list(state.get("security_events", []))
     
     log.info("[security_check] Scanning hash=%s",
@@ -141,7 +141,7 @@ def security_check(state: AgentState) -> AgentState:
     blocked_reason = ""
     if not passed:
         highs = [e for e in events if e["severity"] in ("high","critical")]
-        blocked_reason = highs[0]["detail"] if highs else "Security policy violation"
+        blocked_reason = highs[0]["details"] if highs else "Security policy violation"  # fix: "details" not "detail"
         log.warning("[security_check] BLOCKED risk=%.2f reason=%s", max_risk, blocked_reason)
     else:
         log.info("[security_check] PASSED risk=%.2f in %.1fms",

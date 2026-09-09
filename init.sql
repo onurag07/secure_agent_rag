@@ -35,3 +35,28 @@ CREATE INDEX IF NOT EXISTS rag_metadata_gin_idx ON rag_documents USING gin (meta
 
 -- 7. Collection + timestamp composite index
 CREATE INDEX IF NOT EXISTS rag_collection_idx ON rag_documents (collection, created_at DESC);
+
+-- ============================================================
+-- USER AUTHENTICATION & THREAD MANAGEMENT
+-- ============================================================
+
+-- Users table (signup/signin)
+CREATE TABLE IF NOT EXISTS users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
+    email TEXT UNIQUE NOT NULL,
+    hashed_pw TEXT NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW ()
+);
+
+-- Conversation threads (per user)
+CREATE TABLE IF NOT EXISTS threads (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
+    user_id UUID NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    title TEXT NOT NULL DEFAULT 'New Conversation',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW (),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW ()
+);
+
+-- Index for fast user thread lookup
+CREATE INDEX IF NOT EXISTS threads_user_idx ON threads (user_id, updated_at DESC);
