@@ -1,8 +1,10 @@
-from fastapi import FastAPI, Depends, HTTPException, Security, status, File, UploadFile
+from fastapi import FastAPI, Depends, HTTPException, Security, status, File, UploadFile, Form
 from fastapi.security import APIKeyHeader, OAuth2PasswordBearer
 from pydantic import BaseModel
 import os
 import io
+import shutil
+from fastapi.responses import FileResponse
 import logging
 
 from graph import app as agent_graph
@@ -201,14 +203,21 @@ async def chat(req: QueryRequest, current_user=Depends(get_current_user)):
         "cached": False
     }
 
-# ── Document Ingestion (PDF / TXT) ──────────────────────────────
+# ── Document Management (PDF / TXT) ──────────────────────────────
 @app.post("/api/ingest")
-async def ingest_document(file: UploadFile = File(...), current_user=Depends(get_current_user)):
+async def ingest_document(
+    thread_id: str = Form(...),
+    file: UploadFile = File(...), 
+    current_user=Depends(get_current_user)
+):
     """
-    Ingests PDF or TXT file into Knowledge Base.
-    - Supports .pdf and .txt files.
-    - Extracts text, chunks it, and indexes it into RAG vector/memory store.
+    Ingests PDF or TXT file into Knowledge Base and saves it to user's folder.
     """
+    # Verify thread ownership
+    thread = get_thread(current_user.user_id, thread_id)
+    if not thread:
+        raise HTTPException(status_code=404, detail="Thread not found")
+
     filename = file.filename or "uploaded_file"
     ext = filename.lower().split(".")[-1]
     if ext not in ["txt", "pdf"]:
@@ -217,6 +226,14 @@ async def ingest_document(file: UploadFile = File(...), current_user=Depends(get
     content = await file.read()
     if not content:
         raise HTTPException(status_code=400, detail="Uploaded file is empty.")
+
+    # --- NEW: Save file to user's personal upload folder ---
+    user_upload_dir = os.path.join("uploads", str(current_user.user_id))
+    os.makedirs(user_upload_dir, exist_ok=True)
+    file_path = os.path.join(user_upload_dir, filename)
+    with open(file_path, "wb") as f:
+        f.write(content)
+    # --------------------------------------------------------
 
     extracted_text = ""
     if ext == "pdf":
@@ -237,12 +254,43 @@ async def ingest_document(file: UploadFile = File(...), current_user=Depends(get
         raise HTTPException(status_code=400, detail="No readable text extracted from document.")
 
     chunks_count = add_document_to_knowledge_base(extracted_text, filename=filename)
+    
+    # Associate this upload visually with the chat thread history
+    save_message(
+        current_user.user_id, 
+        thread_id, 
+        "user", 
+        f"📄 **Uploaded Document:** `{filename}`\n_({chunks_count} chunks indexed)_"
+    )
+
     return {
         "status": "ok",
         "filename": filename,
         "chunks_added": chunks_count,
-        "message": f"Successfully ingested {chunks_count} chunks from '{filename}' into Knowledge Base."
+        "message": f"Successfully ingested {chunks_count} chunks and saved '{filename}'!"
     }
+
+@app.get("/api/files")
+def list_files(current_user=Depends(get_current_user)):
+    user_upload_dir = os.path.join("uploads", str(current_user.user_id))
+    if not os.path.exists(user_upload_dir):
+        return {"files": []}
+    return {"files": os.listdir(user_upload_dir)}
+
+@app.get("/api/files/{filename}")
+def download_file(filename: str, current_user=Depends(get_current_user)):
+    file_path = os.path.join("uploads", str(current_user.user_id), filename)
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="File not found")
+    return FileResponse(file_path, filename=filename)
+
+@app.delete("/api/files/{filename}")
+def delete_file(filename: str, current_user=Depends(get_current_user)):
+    file_path = os.path.join("uploads", str(current_user.user_id), filename)
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="File not found")
+    os.remove(file_path)
+    return {"status": "ok", "message": f"Deleted {filename}"}
 
 if __name__ == "__main__":
     import uvicorn

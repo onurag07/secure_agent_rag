@@ -109,6 +109,19 @@ if not st.session_state.jwt_token:
 
 # ── LOGGED IN: Main Chat Interface ─────────────────────────────────
 else:
+    # Auto-load chat history for the active thread if it's currently empty
+    if st.session_state.active_thread_id and not st.session_state.messages:
+        try:
+            _resp = requests.get(
+                f"{API_BASE}/api/threads/{st.session_state.active_thread_id}/messages",
+                headers=auth_headers(), timeout=5
+            )
+            if _resp.status_code == 200:
+                msgs = _resp.json().get("messages", [])
+                st.session_state.messages = [{"role": m["role"], "content": m["content"]} for m in msgs]
+        except Exception:
+            pass
+
     # ── Sidebar ────────────────────────────────────────────────────
     with st.sidebar:
         st.header("🛡️ SecureAgentRAG")
@@ -165,18 +178,48 @@ else:
         st.subheader("📎 Knowledge Base")
         uploaded = st.file_uploader("Upload document (.pdf or .txt)", type=["txt", "pdf"])
         if uploaded and st.button("Ingest File", use_container_width=True):
-            with st.spinner("Parsing & Indexing into Knowledge Base..."):
-                resp = requests.post(
-                    f"{API_BASE}/api/ingest",
-                    headers=auth_headers(),
-                    files={"file": (uploaded.name, uploaded.getvalue())},
-                    timeout=30
-                )
-            if resp.status_code == 200:
-                data = resp.json()
-                st.success(data.get("message", f"Successfully indexed {data.get('chunks_added', 0)} chunks!"))
+            if not st.session_state.active_thread_id:
+                st.error("Please create or select a conversation thread first.")
             else:
-                st.error(f"Ingest failed ({resp.status_code}): {resp.text}")
+                with st.spinner("Parsing & Indexing into Knowledge Base..."):
+                    resp = requests.post(
+                        f"{API_BASE}/api/ingest",
+                        headers=auth_headers(),
+                        data={"thread_id": st.session_state.active_thread_id},
+                        files={"file": (uploaded.name, uploaded.getvalue())},
+                        timeout=30
+                    )
+                if resp.status_code == 200:
+                    data = resp.json()
+                    st.success(data.get("message", f"Successfully indexed {data.get('chunks_added', 0)} chunks!"))
+                    st.session_state.messages = []
+                    st.rerun()
+                else:
+                    st.error(f"Ingest failed ({resp.status_code}): {resp.text}")
+
+        # File Management (List / Download / Delete)
+        st.caption("📂 **Your Uploaded Files**")
+        files_resp = requests.get(f"{API_BASE}/api/files", headers=auth_headers(), timeout=5)
+        if files_resp.status_code == 200:
+            files_list = files_resp.json().get("files", [])
+            if not files_list:
+                st.caption("_No files uploaded yet._")
+            else:
+                for f_name in files_list:
+                    col1, col2, col3 = st.columns([6, 2, 2])
+                    col1.caption(f"`{f_name}`")
+                    
+                    # Download Button
+                    dl_resp = requests.get(f"{API_BASE}/api/files/{f_name}", headers=auth_headers(), timeout=5)
+                    if dl_resp.status_code == 200:
+                        col2.download_button("⬇️", data=dl_resp.content, file_name=f_name, key=f"dl_{f_name}")
+                    
+                    # Delete Button
+                    if col3.button("❌", key=f"del_{f_name}"):
+                        del_resp = requests.delete(f"{API_BASE}/api/files/{f_name}", headers=auth_headers(), timeout=5)
+                        if del_resp.status_code == 200:
+                            st.toast(f"Deleted {f_name}")
+                            st.rerun()
 
         st.divider()
 
